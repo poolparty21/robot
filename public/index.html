@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SunnyHost — AI Space Analyzer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --sunny: #FFD93D;
+            --orange: #FF8C42;
+            --coral: #FF6B6B;
+            --deep: #E85D04;
+            --cream: #FFF5E1;
+            --dark: #2a2a2a;
+        }
+
+        @keyframes bgShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+
+        @keyframes floatRotate {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(2deg); }
+            75% { transform: translateY(-8px) rotate(-2deg); }
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(255, 217, 61, 0.4); }
+            50% { box-shadow: 0 0 35px rgba(255, 217, 61, 0.8), 0 0 50px rgba(255, 140, 66, 0.3); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: rotate(-15deg); }
+            50% { transform: rotate(25deg); }
+        }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-8px); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(-45deg, #FFD93D, #FF8C42, #FF6B6B, #FFB347);
+            background-size: 400% 400%;
+            animation: bgShift 15s ease infinite;
+            min-height: 100vh;
+            overflow: hidden;
+            color: #333;
+        }
+
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .orb:nth-child(1) { width: 350px; height: 350px; background: #FFD93D; top: 5%; left: 5%; animation: float 10s ease-in-out infinite; }
+        .orb:nth-child(2) { width: 280px; height: 280px; background: #FF8C42; bottom: 10%; right: 10%; animation: float 12s ease-in-out infinite 1s; }
+        .orb:nth-child(3) { width: 220px; height: 220px; background: #FF6B6B; top: 40%; left: 60%; animation: float 14s ease-in-out infinite 2s; }
+
+        /* Email Gate */
+        #gate {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #gate.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(1.1);
+        }
+
+        .gate-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 40px;
+            padding: 3.5rem;
+            max-width: 460px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.15);
+            animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .gate-card h1 {
+            color: #FFF;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+            letter-spacing: -1px;
+        }
+
+        .gate-card p {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+        }
+
+        .email-form {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .email-form input {
+            flex: 1;
+            padding: 1.1rem 1.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.35);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.12);
+            color: #FFF;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .email-form input::placeholder { color: rgba(255, 255, 255, 0.55); }
+        .email-form input:focus { background: rgba(255, 255, 255, 0.22); border-color: rgba(255, 255, 255, 0.7); }
+
+        .btn-glow {
+            padding: 1.1rem 2rem;
+            border: none;
+            border-radius: 20px;
+            background: #FFF;
+            color: var(--orange);
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            animation: pulseGlow 2.5s infinite;
+        }
+
+        .btn-glow:hover { transform: translateY(-2px) scale(1.03); }
+
+        /* Main App */
+        .app {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .brand-mark {
+            position: absolute;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: #FFF;
+            font-size: 1.3rem;
+            font-weight: 700;
+            opacity: 0.9;
+        }
+
+        .brand-mark i { color: var(--sunny); font-size: 1.5rem; }
+
+        /* Hero Input Form */
+        .hero-form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Robot */
+        .robot-hero {
+            position: relative;
+            width: 120px;
+            height: 140px;
+            animation: floatRotate 4s ease-in-out infinite;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .robot-hero:hover { transform: scale(1.08); }
+
+        .robot-hero .antenna {
+            width: 5px;
+            height: 18px;
+            background: linear-gradient(180deg, #ccc, #999);
+            margin: 0 auto;
+            position: relative;
+            border-radius: 3px;
+        }
+
+        .robot-hero .antenna::after {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -7px;
+            width: 18px;
+            height: 18px;
+            background: var(--sunny);
+            border-radius: 50%;
+            box-shadow: 0 0 20px var(--sunny), 0 0 40px rgba(255, 217, 61, 0.4);
+            animation: pulseGlow 2s infinite;
+        }
+
+        .robot-hero .head {
+            width: 85px;
+            height: 65px;
+            background: linear-gradient(135deg, #FFF, #f0f0f0);
+            border-radius: 24px 24px 18px 18px;
+            margin: 0 auto;
+            position: relative;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1), inset 0 -2px 10px rgba(0,0,0,0.05);
+        }
+
+        .robot-hero .eyes {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            padding-top: 22px;
+        }
+
+        .robot-hero .eye {
+            width: 16px;
+            height: 16px;
+            background: linear-gradient(135deg, var(--orange), var(--coral));
+            border-radius: 50%;
+            position: relative;
+            animation: blink 3.5s infinite;
+        }
+
+        .robot-hero .eye:nth-child(2) { animation-delay: 0.5s; }
+
+        .robot-hero .eye::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 4px;
+            width: 5px;
+            height: 5px;
+            background: #FFF;
+            border-radius: 50%;
+        }
+
+        .robot-hero .mouth {
+            width: 24px;
+            height: 8px;
+            background: linear-gradient(90deg, var(--coral), var(--orange));
+            border-radius: 0 0 12px 12px;
+            margin: 10px auto 0;
+        }
+
+        .robot-hero .body {
+            width: 60px;
+            height: 45px;
+            background: linear-gradient(135deg, #FFF, #e8e8e8);
+            border-radius: 14px;
+            margin: 5px auto 0;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .robot-hero .screen {
+            width: 42px;
+            height: 24px;
+            background: linear-gradient(90deg, #1a1a2e, #2a2a3e);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .robot-hero .screen::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 6px;
+            width: 10px;
+            height: 8px;
+            background: #0f0;
+            border-radius: 2px;
+            animation: blink 2s infinite;
+        }
+
+        .robot-hero .screen::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            right: 6px;
+            width: 20px;
+            height: 2px;
+            background: rgba(0, 255, 0, 0.3);
+            border-radius: 1px;
+        }
+
+        .robot-hero .arm-left, .robot-hero .arm-right {
+            position: absolute;
+            width: 10px;
+            height: 28px;
+            background: linear-gradient(180deg, #ddd, #bbb);
+            border-radius: 5px;
+            top: 75px;
+        }
+
+        .robot-hero .arm-left { left: 18px; transform-origin: top center; animation: wave 2.5s ease-in-out infinite; }
+        .robot-hero .arm-right { right: 18px; transform-origin: top center; animation: wave 2.5s ease-in-out infinite 1.2s; }
+
+        .robot-shadow {
+            width: 60px;
+            height: 8px;
+            background: rgba(0,0,0,0.15);
+            border-radius: 50%;
+            margin: 5px auto 0;
+            filter: blur(4px);
+        }
+
+        /* Headline */
+        .hero-headline { text-align: center; color: #FFF; }
+        .hero-headline h2 { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.5rem; letter-spacing: -0.5px; text-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .hero-headline p { font-size: 1rem; color: rgba(255, 255, 255, 0.8); line-height: 1.5; }
+
+        /* Input */
+        .input-hero { width: 100%; position: relative; }
+
+        .input-glow {
+            position: absolute;
+            inset: -4px;
+            background: linear-gradient(135deg, var(--sunny), var(--orange), var(--coral));
+            border-radius: 28px;
+            opacity: 0.5;
+            filter: blur(12px);
+            animation: pulseGlow 3s infinite;
+            z-index: -1;
+        }
+
+        .input-box {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            border-radius: 24px;
+            padding: 0.5rem 0.5rem 0.5rem 1.25rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.5);
+            transition: all 0.3s;
+        }
+
+        .input-box:focus-within {
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15), 0 0 0 2px var(--sunny);
+            transform: translateY(-2px);
+        }
+
+        .input-box input {
+            flex: 1;
+            border: none;
+            background: none;
+            color: var(--dark);
+            font-size: 1.05rem;
+            outline: none;
+            padding: 0.6rem 0;
+        }
+
+        .input-box input::placeholder { color: #bbb; font-size: 1rem; }
+
+        .input-action {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            border: none;
+            background: #f5f5f5;
+            color: #888;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+
+        .input-action:hover { background: #eee; color: var(--orange); transform: scale(1.05); }
+
+        .input-send {
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            border: none;
+            background: linear-gradient(135deg, var(--orange), var(--coral));
+            color: #FFF;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            flex-shrink: 0;
+        }
+
+        .input-send:hover { transform: scale(1.08) rotate(-5deg); box-shadow: 0 6px 25px rgba(255, 107, 107, 0.5); }
+
+        /* Suggestions */
+        .suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            justify-content: center;
+            max-width: 100%;
+        }
+
+        .chip {
+            padding: 0.6rem 1.1rem;
+            border: 1.5px solid rgba(255, 255, 255, 0.4);
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.12);
+            color: #FFF;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chip::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .chip:hover::before { transform: translateX(100%); }
+        .chip:hover { background: rgba(255, 255, 255, 0.25); border-color: rgba(255, 255, 255, 0.7); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .chip i { margin-right: 0.4rem; font-size: 0.85rem; }
+
+        /* Chat History (bottom, collapsed) */
+        .chat-history {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-width: 700px;
+            margin: 0 auto;
+            z-index: 10;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .chat-history.collapsed { transform: translateY(calc(100% - 50px)); }
+
+        .chat-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 16px 16px 0 0;
+            cursor: pointer;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-bottom: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--orange);
+            width: 160px;
+            margin: 0 auto;
+        }
+
+        .chat-toggle i { transition: transform 0.3s; }
+        .chat-history.collapsed .chat-toggle i { transform: rotate(180deg); }
+
+        .chat-messages {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            box-shadow: 0 -8px 30px rgba(0,0,0,0.1);
+        }
+
+        .msg {
+            max-width: 85%;
+            padding: 0.875rem 1.1rem;
+            border-radius: 18px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            animation: slideUp 0.3s ease;
+        }
+
+        .msg.bot { align-self: flex-start; background: #f5f5f5; color: #333; border-bottom-left-radius: 4px; }
+        .msg.user { align-self: flex-end; background: linear-gradient(135deg, var(--orange), var(--coral)); color: #FFF; border-bottom-right-radius: 4px; }
+
+        .msg-label { font-size: 0.7rem; font-weight: 700; color: var(--orange); margin-bottom: 0.25rem; }
+
+        .magic-card {
+            background: linear-gradient(135deg, #FFF 0%, var(--cream) 100%);
+            border: 2px solid var(--sunny);
+            border-radius: 16px;
+            padding: 1.25rem;
+            margin-top: 0.5rem;
+        }
+
+        .magic-title { font-weight: 800; color: var(--deep); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+
+        .big-num { font-size: 2.5rem; font-weight: 900; color: var(--deep); text-align: center; }
+
+        .plat-grid { display: grid; grid-template-columns: 1fr; gap: 0.6rem; margin-top: 0.75rem; }
+
+        .plat-box { background: #FFF; border-radius: 12px; padding: 0.875rem; text-align: center; }
+        .plat-box .icon { font-size: 1.3rem; margin-bottom: 0.3rem; }
+        .plat-box.airbnb .icon { color: #FF5A5F; }
+        .plat-box .amt { font-size: 1.1rem; font-weight: 800; color: #333; }
+        .plat-box .tag { font-size: 0.7rem; color: #999; }
+
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+
+        .stat-box { background: #f8f8f8; border-radius: 12px; padding: 0.875rem; text-align: center; }
+        .stat-val { font-size: 1.3rem; font-weight: 800; color: var(--deep); }
+        .stat-lbl { font-size: 0.7rem; color: #999; margin-top: 0.2rem; text-transform: uppercase; }
+
+        /* Infos Tab */
+        .infos-tab {
+            position: fixed;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%) translateX(calc(100% - 48px));
+            z-index: 100;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .infos-tab.open { transform: translateY(-50%) translateX(0); }
+
+        .infos-handle {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 48px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 16px 0 0 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            cursor: pointer;
+            box-shadow: -4px 0 20px rgba(0,0,0,0.08);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-right: none;
+            transition: all 0.3s;
+        }
+
+        .infos-handle:hover { width: 52px; }
+        .infos-handle i { color: var(--orange); font-size: 1.1rem; }
+
+        .infos-handle .handle-text {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--orange);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .infos-panel {
+            margin-left: 48px;
+            width: 300px;
+            height: 70vh;
+            max-height: 520px;
+            background: rgba(255, 255, 255, 0.97);
+            backdrop-filter: blur(30px);
+            border-radius: 20px 0 0 20px;
+            box-shadow: -10px 0 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .infos-header {
+            padding: 1.25rem;
+            background: linear-gradient(135deg, var(--orange), var(--coral));
+            color: #FFF;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .infos-header h3 { font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem; }
+
+        .infos-close { width: 32px; height: 32px; border-radius: 50%; border: none; background: rgba(255,255,255,0.2); color: #FFF; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+        .infos-content { flex: 1; overflow-y: auto; padding: 1rem; }
+
+        .infos-section { margin-bottom: 1.5rem; }
+
+        .infos-section-title { font-size: 0.7rem; font-weight: 800; color: #bbb; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 0.75rem; }
+
+        .info-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.875rem; background: #f8f8f8; border-radius: 12px; margin-bottom: 0.5rem; text-decoration: none; color: #333; transition: all 0.3s; border: 1px solid transparent; }
+
+        .info-link:hover { transform: translateX(4px); border-color: var(--sunny); }
+
+        .info-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+        .info-icon.airbnb { background: #FFE8E8; color: #FF5A5F; }
+
+        .info-text { flex: 1; }
+        .info-text div:first-child { font-weight: 700; font-size: 0.9rem; }
+        .info-text div:last-child { font-size: 0.75rem; color: #999; margin-top: 0.15rem; }
+
+        .host-cta { background: linear-gradient(135deg, var(--orange), var(--coral)); border-radius: 14px; padding: 1.25rem; color: #FFF; text-align: center; cursor: pointer; transition: all 0.3s; margin-top: 0.5rem; }
+        .host-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(232, 93, 4, 0.3); }
+        .host-cta i { font-size: 1.6rem; margin-bottom: 0.4rem; }
+        .host-cta div:first-of-type { font-weight: 800; font-size: 0.95rem; }
+        .host-cta div:last-child { font-size: 0.8rem; opacity: 0.9; margin-top: 0.2rem; }
+
+        /* Modal */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: none; align-items: center; justify-content: center; z-index: 500; backdrop-filter: blur(8px); }
+        .modal-overlay.active { display: flex; }
+
+        .modal { background: #FFF; border-radius: 28px; padding: 2.5rem; max-width: 420px; width: 90%; box-shadow: 0 30px 60px rgba(0,0,0,0.2); animation: slideUp 0.4s ease; }
+        .modal h2 { color: var(--deep); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; }
+
+        .field { margin-bottom: 1.25rem; }
+        .field label { display: block; font-size: 0.85rem; font-weight: 700; color: #888; margin-bottom: 0.5rem; }
+        .field input { width: 100%; padding: 0.875rem 1.125rem; border: 2px solid #eee; border-radius: 14px; font-size: 0.95rem; outline: none; transition: all 0.3s; }
+        .field input:focus { border-color: var(--orange); }
+
+        .field .info-note { font-size: 0.8rem; color: #999; margin-top: 0.25rem; padding-left: 0.125rem; }
+
+        .modal-actions { display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 2rem; }
+
+        .btn-text { padding: 0.7rem 1.3rem; border: none; background: none; color: #888; cursor: pointer; font-size: 0.95rem; border-radius: 12px; }
+        .btn-text:hover { background: #f5f5f5; }
+
+        .btn-primary { padding: 0.7rem 1.5rem; border: none; border-radius: 12px; background: linear-gradient(135deg, var(--orange), var(--coral)); color: #FFF; cursor: pointer; font-weight: 700; font-size: 0.95rem; transition: all 0.3s; }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(255,107,107,0.4); }
+
+        /* Typing */
+        .typing { display: flex; gap: 0.3rem; padding: 0.5rem; }
+        .typing span { width: 8px; height: 8px; background: var(--orange); border-radius: 50%; animation: bounce 1.4s infinite; }
+        .typing span:nth-child(1) { animation-delay: 0s; }
+        .typing span:nth-child(2) { animation-delay: 0.2s; }
+        .typing span:nth-child(3) { animation-delay: 0.4s; }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
+
+        @media (max-width: 640px) {
+            .hero-headline h2 { font-size: 1.3rem; }
+            .infos-panel { width: 260px; }
+            .chip { font-size: 0.8rem; padding: 0.5rem 1rem; }
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <div class="orb"></div>
+    <div class="orb"></div>
+    <div class="orb"></div>
+
+    <!-- Email Gate -->
+    <div id="gate">
+        <div class="gate-card">
+            <h1>☀️ SunnyHost</h1>
+            <p>Discover how much your space could earn. Our AI analyzes your room, location, and market trends.</p>
+            <div class="email-form">
+                <input type="email" id="emailInput" placeholder="your@email.com" onkeypress="if(event.key==='Enter') unlock()">
+                <button class="btn-glow" onclick="unlock()"><i class="fas fa-arrow-right"></i></button>
+            </div>
+            <p style="font-size: 0.8rem; color: rgba(255,255,255,0.6);"><i class="fas fa-bolt"></i> No confirmation needed. Instant access.</p>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settingsModal" onclick="if(event.target===this) closeSettings()">
+        <div class="modal">
+            <h2><i class="fas fa-cog"></i> Settings</h2>
+            <div class="field">
+                <label><i class="fas fa-tag"></i> Affiliate ID</label>
+                <input type="text" id="affIdInput" placeholder="sidebusiness">
+                <div class="info-note">Affiliate URL is managed server-side for security.</div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-text" onclick="closeSettings()">Cancel</button>
+                <button class="btn-primary" onclick="saveSettings()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Infos Tab -->
+    <div class="infos-tab" id="infosTab">
+        <div class="infos-handle" onclick="toggleInfos()">
+            <i class="fas fa-chevron-left" id="infosIcon"></i>
+            <span class="handle-text">Infos</span>
+            <i class="fas fa-info-circle"></i>
+        </div>
+        <div class="infos-panel">
+            <div class="infos-header">
+                <h3><i class="fas fa-sun"></i> Infos</h3>
+                <button class="infos-close" onclick="toggleInfos()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="infos-content">
+                <div class="infos-section">
+                    <div class="infos-section-title">Your Affiliate Link</div>
+                    <a href="#" class="info-link" onclick="track()">
+                        <div class="info-icon airbnb"><i class="fab fa-airbnb"></i></div>
+                        <div class="info-text"><div>Airbnb</div><div>Sign up & start hosting</div></div>
+                        <i class="fas fa-external-link-alt" style="color: #ddd; font-size: 0.8rem;"></i>
+                    </a>
+                </div>
+                <div class="infos-section">
+                    <div class="infos-section-title">Live Stats</div>
+                    <div class="stats-grid">
+                        <div class="stat-box"><div class="stat-val" id="statIncome">$0</div><div class="stat-lbl">Monthly</div></div>
+                        <div class="stat-box"><div class="stat-val" id="statOcc">0%</div><div class="stat-lbl">Occupancy</div></div>
+                        <div class="stat-box"><div class="stat-val" id="statRate">$0</div><div class="stat-lbl">Daily Rate</div></div>
+                        <div class="stat-box"><div class="stat-val" id="statDays">0</div><div class="stat-lbl">To Booking</div></div>
+                    </div>
+                </div>
+                <div class="infos-section">
+                    <div class="infos-section-title">Become a Host</div>
+                    <div class="host-cta" onclick="sendQuick('How do I become a host?')">
+                        <i class="fas fa-key"></i>
+                        <div>Start Hosting Today</div>
+                        <div>Earn up to $2,000/month</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div class="app" id="app" style="display: none;">
+        <div class="brand-mark"><i class="fas fa-sun"></i><span>SunnyHost</span></div>
+
+        <!-- Hero: Robot + Input Form -->
+        <div class="hero-form">
+            <div class="robot-hero" onclick="sendQuick('Hey Sunny!')">
+                <div class="antenna"></div>
+                <div class="head">
+                    <div class="eyes"><div class="eye"></div><div class="eye"></div></div>
+                    <div class="mouth"></div>
+                </div>
+                <div class="body"><div class="screen"></div></div>
+                <div class="arm-left"></div>
+                <div class="arm-right"></div>
+                <div class="robot-shadow"></div>
+            </div>
+
+            <div class="hero-headline">
+                <h2>Hey, I'm Sunny! 👋</h2>
+                <p>Tell me about your space and I'll show you exactly<br>how much you could earn on Airbnb</p>
+            </div>
+
+            <div class="input-hero">
+                <div class="input-glow"></div>
+                <div class="input-box">
+                    <input type="text" id="chatInput" placeholder="I have a spare room, can I earn money with it?" onkeypress="if(event.key==='Enter') send()">
+                    <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="handleFile(event)">
+                    <button class="input-action" onclick="document.getElementById('fileInput').click()" title="Upload photo"><i class="fas fa-image"></i></button>
+                    <button class="input-action" onclick="openSettings()" title="Settings"><i class="fas fa-cog"></i></button>
+                    <button class="input-send" onclick="send()" title="Send"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+
+            <div class="suggestions" id="suggestions">
+                <button class="chip" onclick="fillInput('I have a spare room, can I earn money with it?')"><i class="fas fa-bed"></i> I have a spare room</button>
+                <button class="chip" onclick="fillInput('I want to start earning $10,000 a month extra, what do I have to do?')"><i class="fas fa-fire"></i> Earn $10K/month</button>
+                <button class="chip" onclick="fillInput('Show me my income potential')"><i class="fas fa-calculator"></i> Check income</button>
+                <button class="chip" onclick="fillInput('How do I become a host?')"><i class="fas fa-home"></i> Become a host</button>
+                <button class="chip" onclick="fillInput('Upload my room photo')"><i class="fas fa-camera"></i> Upload photo</button>
+                <button class="chip" onclick="fillInput('Pin my location on the map')"><i class="fas fa-map-pin"></i> Set location</button>
+            </div>
+        </div>
+
+        <!-- Chat History (bottom, collapsed) -->
+        <div class="chat-history collapsed" id="chatHistory">
+            <div class="chat-toggle" onclick="toggleChat()"><i class="fas fa-chevron-up"></i><span>Chat History</span></div>
+            <div class="chat-messages" id="chatMessages"></div>
+        </div>
+    </div>
+
+    <script>
+        let email = '';
+        let referralUrl = localStorage.getItem('affUrl') || '';
+        let history = [];
+        let stats = { income: 0, occ: 0, rate: 0, days: 0 };
+
+        // ── Email Gate ─────────────────────────────────
+
+        function shake(el) {
+            el.style.animation = 'none';
+            el.offsetHeight;
+            el.style.animation = 'shake 0.5s ease';
+            setTimeout(() => el.style.animation = 'slideUp 0.8s ease', 500);
+        }
+
+        async function unlock() {
+            const val = document.getElementById('emailInput').value.trim();
+            if (!val.includes('@')) {
+                shake(document.querySelector('.gate-card'));
+                return;
+            }
+            email = val;
+
+            try {
+                // Create lead via API (sets httpOnly cookie)
+                const leadRes = await fetch('/api/leads', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+
+                if (leadRes.ok) {
+                    const leadData = await leadRes.json();
+                    console.log('Lead created:', leadData.leadId);
+                }
+
+                // Auto affiliate signup (server generates the URL)
+                await autoSignupAffiliate(email);
+            } catch (e) {
+                console.log('Lead creation failed, continuing in offline mode:', e);
+            }
+
+            // Reveal the app
+            document.getElementById('gate').classList.add('hidden');
+            document.getElementById('app').style.display = 'flex';
+            setTimeout(() => document.getElementById('chatInput').focus(), 600);
+        }
+
+        async function autoSignupAffiliate(email) {
+            try {
+                const res = await fetch('/api/affiliate/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    referralUrl = data.referralUrl;
+                    localStorage.setItem('affUrl', referralUrl);
+                    console.log('Affiliate URL ready:', referralUrl);
+                }
+            } catch (e) {
+                console.log('Affiliate signup unavailable:', e);
+            }
+        }
+
+        // ── UI Toggles ─────────────────────────────────
+
+        function toggleChat() {
+            document.getElementById('chatHistory').classList.toggle('collapsed');
+        }
+
+        function toggleInfos() {
+            const tab = document.getElementById('infosTab');
+            const icon = document.getElementById('infosIcon');
+            tab.classList.toggle('open');
+            icon.className = tab.classList.contains('open') ? 'fas fa-chevron-right' : 'fas fa-chevron-left';
+        }
+
+        function fillInput(text) {
+            document.getElementById('chatInput').value = text;
+            document.getElementById('chatInput').focus();
+        }
+
+        // ── Chat Messages ──────────────────────────────
+
+        function botMsg(text, html) {
+            const area = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = 'msg bot';
+            if (html) {
+                div.innerHTML = html;
+            } else {
+                div.innerHTML = '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div>' +
+                    text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
+            }
+            area.appendChild(div);
+            area.scrollTop = area.scrollHeight;
+            document.getElementById('chatHistory').classList.remove('collapsed');
+            return div;
+        }
+
+        function userMsg(text) {
+            const area = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = 'msg user';
+            div.textContent = text;
+            area.appendChild(div);
+            area.scrollTop = area.scrollHeight;
+            document.getElementById('chatHistory').classList.remove('collapsed');
+        }
+
+        function showTyping() {
+            const area = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = 'msg bot typing-indicator';
+            div.innerHTML = '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div><div class="typing"><span></span><span></span><span></span></div>';
+            area.appendChild(div);
+            area.scrollTop = area.scrollHeight;
+            document.getElementById('chatHistory').classList.remove('collapsed');
+            return div;
+        }
+
+        function removeTyping() {
+            const el = document.querySelector('.typing-indicator');
+            if (el) el.remove();
+        }
+
+        // ── Main Send ──────────────────────────────────
+
+        async function send() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text) return;
+            input.value = '';
+            userMsg(text);
+            await handleIntent(text);
+        }
+
+        function sendQuick(text) {
+            userMsg(text);
+            handleIntent(text);
+        }
+
+        async function handleIntent(text) {
+            const t = showTyping();
+            const low = text.toLowerCase();
+
+            // Check for photo upload intent
+            if (low.indexOf('photo') !== -1 || low.indexOf('upload') !== -1 || low.indexOf('picture') !== -1) {
+                setTimeout(function() { removeTyping(); showUpload(); }, 600);
+                return;
+            }
+            // Check for income / earn intent
+            if (low.indexOf('income') !== -1 || low.indexOf('earn') !== -1 || low.indexOf('money') !== -1 || low.indexOf('potential') !== -1 || low.indexOf('10,000') !== -1 || low.indexOf('10k') !== -1) {
+                setTimeout(function() { removeTyping(); showIncome(); }, 800);
+                return;
+            }
+            // Map / location intent
+            if (low.indexOf('map') !== -1 || low.indexOf('location') !== -1 || low.indexOf('pin') !== -1 || low.indexOf('where') !== -1) {
+                setTimeout(function() { removeTyping(); showMap(); }, 700);
+                return;
+            }
+            // Analytics intent
+            if (low.indexOf('analytic') !== -1 || low.indexOf('market') !== -1 || low.indexOf('stat') !== -1 || low.indexOf('data') !== -1) {
+                setTimeout(function() { removeTyping(); showAnalytics(); }, 900);
+                return;
+            }
+            // Host / become intent
+            if (low.indexOf('host') !== -1 || low.indexOf('become') !== -1 || low.indexOf('start') !== -1 || low.indexOf('begin') !== -1) {
+                setTimeout(function() { removeTyping(); showHostInfo(); }, 700);
+                return;
+            }
+
+            // General Q&A — always calls server-side AI
+            try {
+                const reply = await fetchGroq(text);
+                removeTyping();
+                botMsg(reply);
+            } catch (e) {
+                removeTyping();
+                botMsg(getLocalReply(text));
+            }
+        }
+
+        // ── Local fallback (when AI is unavailable) ─────
+
+        function getLocalReply(text) {
+            const low = text.toLowerCase();
+            if (low.indexOf('10,000') !== -1 || low.indexOf('10k') !== -1) {
+                return 'To hit $10,000/month, you need about 3-4 well-located properties or one premium space in a high-demand area.\n\nYour options:\n• Multi-property — 3-4 apartments earning $2,500-3,500 each\n• Premium space — Luxury villa in top tourist area\n• Arbitrage — Rent long-term, list short-term\n\nWant me to calculate based on your location?';
+            }
+            if (low.indexOf('spare room') !== -1) {
+                return 'A spare room is a goldmine! Here is the real picture:\n\nAverage earnings: $800 — $2,000/month\n\nQuick wins:\n• Add a desk = +$200/month (remote workers pay premium)\n• Good photos = +30% more bookings\n• Instant Book = +25% visibility\n\nWant me to calculate your exact potential?';
+            }
+            const replies = [
+                'Great question! To give you accurate numbers, I need your location and room type. Want to share those?',
+                'Your space has serious potential! Most hosts earn $800-2,500/month. Shall I calculate yours?',
+                'I love your enthusiasm! The key factors: location, amenities, and photos. Want to upload a room photo?',
+                'Smart thinking! Spaces like yours are in high demand. Want to see the market analytics?',
+                'Absolutely! First, let us pin your location so I can check local competition and pricing. Ready?'
+            ];
+            return replies[Math.floor(Math.random() * replies.length)];
+        }
+
+        // ── AI Chat (via server proxy) ──────────────────
+
+        async function fetchGroq(text) {
+            const res = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: text, history })
+            });
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                throw new Error(err.error || 'Chat API error');
+            }
+            const data = await res.json();
+            const reply = data.reply;
+            history.push({ role: 'user', content: text }, { role: 'assistant', content: reply });
+            return reply;
+        }
+
+        // ── Photo Upload ───────────────────────────────
+
+        function showUpload() {
+            const id = 'up-' + Date.now();
+            botMsg(null, '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div><div style="border: 2px dashed #FFD93D; border-radius: 16px; padding: 2rem; text-align: center; background: rgba(255,255,255,0.5); cursor: pointer;" onclick="document.getElementById(\'' + id + '\').click()"><i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: #FF8C42; margin-bottom: 0.5rem;"></i><div style="font-weight: 700;">Drop your room photo here</div><div style="font-size: 0.85rem; color: #888;">or click to browse</div></div><input type="file" id="' + id + '" accept="image/*" style="display:none" onchange="handleFileDirect(event, \'' + id + '\')">');
+        }
+
+        function handleFile(event) {
+            const file = event.target.files[0];
+            if (file) processImage(file);
+        }
+
+        function handleFileDirect(event, id) {
+            const file = event.target.files[0];
+            if (file) processImage(file);
+        }
+
+        async function processImage(file) {
+            const formData = new FormData();
+            formData.append('photo', file);
+
+            // Show local preview immediately
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = e.target.result;
+                botMsg(null, '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div><div>Analyzing your space...</div><img src="' + preview + '" style="width: 100%; border-radius: 12px; margin-top: 0.5rem;" alt="Room">');
+            };
+            reader.readAsDataURL(file);
+
+            // Upload to server for AI analysis
+            try {
+                const res = await fetch('/api/photo', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    // Update the last bot message with analysis
+                    const msgs = document.getElementById('chatMessages');
+                    const lastMsg = msgs.lastElementChild;
+                    if (lastMsg && lastMsg.classList.contains('bot')) {
+                        let html = '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div>';
+                        if (data.analysis) {
+                            html += '<div>' + data.analysis.replace(/\n/g, '<br>') + '</div>';
+                        } else {
+                            html += '<div>Beautiful space! Here is what I see:<br>• Natural light<br>• Cozy vibe<br>• Good proportions</div>';
+                        }
+                        html += '<div style="margin-top: 0.75rem;">This room could earn <b>$1,200-1,800/month</b>. Want the full breakdown?</div>';
+                        lastMsg.innerHTML = html;
+                    }
+                }
+            } catch (e) {
+                console.log('Photo upload failed:', e);
+            }
+        }
+
+        // ── Income Estimate (via server) ───────────────
+
+        async function showIncome() {
+            try {
+                const res = await fetch('/api/estimate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({})
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    stats.income = data.monthlyIncome;
+                    stats.rate = data.dailyRate;
+                    stats.occ = data.occupancy;
+                    stats.days = data.daysToBooking;
+                    updateStats();
+
+                    botMsg(null, '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div><div class="magic-card"><div class="magic-title"><i class="fas fa-calculator"></i> Your Income Potential</div><div style="text-align: center; color: #888; font-size: 0.85rem;">Estimated Monthly Earnings</div><div class="big-num">$' + data.monthlyIncome.toLocaleString() + '</div><div class="plat-grid"><div class="plat-box airbnb"><div class="icon"><i class="fab fa-airbnb"></i></div><div class="amt">$' + data.airbnbEstimate.toLocaleString() + '</div><div class="tag">Airbnb</div></div></div><div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eee; font-size: 0.8rem; color: #666; text-align: center;"><i class="fas fa-lightbulb" style="color: #FFD93D;"></i> Pro tip: Quality photos and fast responses boost earnings!</div></div>');
+                    return;
+                }
+            } catch (e) {
+                console.log('Estimate API failed, using local fallback');
+            }
+
+            // Fallback: local random calculation
+            const base = Math.floor(Math.random() * 1200) + 800;
+            const airbnb = Math.floor(base * 1.25);
+            stats.income = base;
+            stats.rate = Math.floor(base / 22);
+            stats.occ = 87;
+            stats.days = Math.floor(Math.random() * 10) + 5;
+            updateStats();
+
+            botMsg(null, '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div><div class="magic-card"><div class="magic-title"><i class="fas fa-calculator"></i> Your Income Potential</div><div style="text-align: center; color: #888; font-size: 0.85rem;">Estimated Monthly Earnings</div><div class="big-num">$' + base.toLocaleString() + '</div><div class="plat-grid"><div class="plat-box airbnb"><div class="icon"><i class="fab fa-airbnb"></i></div><div class="amt">$' + airbnb.toLocaleString() + '</div><div class="tag">Airbnb</div></div></div><div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eee; font-size: 0.8rem; color: #666; text-align: center;"><i class="fas fa-lightbulb" style="color: #FFD93D;"></i> Pro tip: Quality photos and fast responses boost earnings!</div></div>');
+        }
+
+        // ── Map / Location ─────────────────────────────
+
+        function showMap() {
+            const mid = 'map-' + Date.now();
+            botMsg(null, '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div><div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;"><input type="text" id="loc-' + mid + '" placeholder="Enter city or address..." style="flex:1; padding: 0.6rem 1rem; border: 2px solid #FFD93D; border-radius: 12px; background: #FFF; color: #333; outline: none; font-size: 0.9rem;" onkeypress="if(event.key===\'Enter\')searchLoc(\'' + mid + '\')"><button style="padding: 0.6rem 1rem; border: none; border-radius: 12px; background: #FF8C42; color: #FFF; cursor: pointer;" onclick="searchLoc(\'' + mid + '\')"><i class="fas fa-search"></i></button></div><div id="' + mid + '" style="width: 100%; height: 200px; border-radius: 14px; border: 2px solid #FFD93D; overflow: hidden;"></div><div style="margin-top: 0.5rem; font-size: 0.8rem; color: #888;"><i class="fas fa-hand-pointer" style="color: #FF6B6B;"></i> Drag the pin to your exact location</div>');
+        }
+
+        function searchLoc(mid) {
+            const val = document.getElementById('loc-' + mid).value;
+            botMsg('Location "' + val + '" set! This area has strong demand. Let me show you the market data.');
+            showAnalytics();
+        }
+
+        function showAnalytics() {
+            botMsg(null, '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div><div class="magic-card"><div class="magic-title"><i class="fas fa-chart-bar"></i> Market Analytics</div><div class="stats-grid" style="margin-top: 0.5rem;"><div class="stat-box"><div class="stat-val" style="color: #28a745;">87%</div><div class="stat-lbl">Occupancy</div></div><div class="stat-box"><div class="stat-val" style="color: #E85D04;">$142</div><div class="stat-lbl">Daily Rate</div></div><div class="stat-box"><div class="stat-val" style="color: #007bff;">4.8★</div><div class="stat-lbl">Target Rating</div></div><div class="stat-box"><div class="stat-val" style="color: #6f42c1;">12d</div><div class="stat-lbl">To 1st Booking</div></div></div><div style="margin-top: 1rem; padding: 0.75rem; background: linear-gradient(90deg, #FFD93D, #FF8C42); border-radius: 10px; text-align: center; color: #FFF; font-weight: 700;"><i class="fas fa-trophy"></i> Your area is in the TOP 25% for demand!</div></div>');
+        }
+
+        function showHostInfo() {
+            botMsg(null, '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div><div class="magic-card"><div class="magic-title"><i class="fas fa-key"></i> Your Hosting Journey</div><div style="display: flex; flex-direction: column; gap: 0.6rem;"><div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: #FFF; border-radius: 10px;"><div style="width: 30px; height: 30px; background: #FFD93D; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.85rem; color: #5a4a00;">1</div><div><div style="font-weight: 700; font-size: 0.9rem;">Sign up & verify</div><div style="font-size: 0.75rem; color: #999;">Takes 10 minutes</div></div></div><div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: #FFF; border-radius: 10px;"><div style="width: 30px; height: 30px; background: #FF8C42; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.85rem; color: #FFF;">2</div><div><div style="font-weight: 700; font-size: 0.9rem;">List your space</div><div style="font-size: 0.75rem; color: #999;">Photos, description, pricing</div></div></div><div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: #FFF; border-radius: 10px;"><div style="width: 30px; height: 30px; background: #FF6B6B; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.85rem; color: #FFF;">3</div><div><div style="font-weight: 700; font-size: 0.9rem;">Get bookings & earn</div><div style="font-size: 0.75rem; color: #999;">First booking in ~2 weeks</div></div></div></div><div style="margin-top: 0.75rem; padding: 1rem; background: linear-gradient(135deg, #FF8C42, #FF6B6B); border-radius: 12px; color: #FFF; text-align: center; cursor: pointer;" onclick="track()"><div style="font-weight: 800;"><i class="fas fa-rocket"></i> Start Now — Get $25 Bonus</div></div></div>');
+        }
+
+        // ── Stats ──────────────────────────────────────
+
+        function updateStats() {
+            if (stats.income) document.getElementById('statIncome').textContent = '$' + stats.income.toLocaleString();
+            if (stats.occ) document.getElementById('statOcc').textContent = stats.occ + '%';
+            if (stats.rate) document.getElementById('statRate').textContent = '$' + stats.rate;
+            if (stats.days) document.getElementById('statDays').textContent = stats.days + 'd';
+        }
+
+        // ── Affiliate Tracking (Airbnb only) ────────────
+
+        function track() {
+            const url = referralUrl || 'https://www.airbnb.com/r/sidebusiness';
+            window.open(url, '_blank');
+            botMsg('Opened your Airbnb referral link! Check ' + email + ' for any welcome bonus available to new hosts.');
+        }
+
+        // ── Settings Modal ──────────────────────────────
+
+        function openSettings() {
+            document.getElementById('settingsModal').classList.add('active');
+            document.getElementById('affIdInput').value = localStorage.getItem('affId') || 'sidebusiness';
+        }
+
+        function closeSettings() {
+            document.getElementById('settingsModal').classList.remove('active');
+        }
+
+        function saveSettings() {
+            const affVal = document.getElementById('affIdInput').value.trim() || 'sidebusiness';
+            localStorage.setItem('affId', affVal);
+            // Note: the actual affiliate URL is server-managed via AFFILIATE_ID env var
+            closeSettings();
+            botMsg('Settings saved! (Affiliate ID is applied server-side for security.)');
+        }
+
+        // ── Load persisted stats on page init ──────────
+
+        async function loadStats() {
+            try {
+                const res = await fetch('/api/stats');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.exists) {
+                        stats.income = data.monthlyIncome;
+                        stats.occ = data.occupancy;
+                        stats.rate = data.dailyRate;
+                        stats.days = data.daysToBooking;
+                        updateStats();
+                        console.log('Loaded persisted stats');
+                    }
+                }
+            } catch (e) {
+                // No lead session yet — that's fine
+                console.log('No prior stats to load');
+            }
+        }
+
+        // ── Init ────────────────────────────────────────
+
+        document.getElementById('emailInput').focus();
+        loadStats();
+    </script>
+</body>
+</html>
