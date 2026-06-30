@@ -1,4 +1,6 @@
-require('dotenv').config();
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 
 const express = require('express');
 const cookieParser = require('cookie-parser');
@@ -29,7 +31,7 @@ app.use(cors({
 }));
 
 app.use(express.json({ limit: '10mb' }));
-app.use(cookieParser(process.env.COOKIE_SECRET || 'sunnyhost-secret-' + Date.now()));
+app.use(cookieParser(process.env.COOKIE_SECRET || 'sunnyhost-secret-2026'));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
