@@ -9,7 +9,8 @@ const rateLimit = require('express-rate-limit');
 const multer = require('multer');
 const path = require('path');
 const crypto = require('crypto');
-const fs = require('fs');
+
+const { uploadFile } = require('./lib/supabase');
 
 const {
   initSchema,
@@ -324,16 +325,18 @@ app.post('/api/photo', upload.single('photo'), async (req, res) => {
       }
     }
 
-    // Save to local uploads directory
-    const filename = `photo-${Date.now()}-${crypto.randomBytes(4).toString('hex')}.${ext}`;
-    const uploadsDir = path.join(__dirname, 'public', 'uploads');
+    // Upload to Supabase Storage (persists across Vercel deployments)
+    const filename = `photos/${leadId || 'anon'}/${Date.now()}-${crypto.randomBytes(4).toString('hex')}.${ext}`;
+    const bucket = process.env.SUPABASE_STORAGE_BUCKET || 'sunnhost-photos';
 
-    if (!fs.existsSync(uploadsDir)) {
-      fs.mkdirSync(uploadsDir, { recursive: true });
+    const { publicUrl, error: uploadError } = await uploadFile(bucket, filename, req.file.buffer, mimeType);
+
+    if (uploadError) {
+      console.error('Supabase Storage upload error:', uploadError);
+      return res.status(500).json({ error: 'Failed to upload photo to storage' });
     }
-    fs.writeFileSync(path.join(uploadsDir, filename), req.file.buffer);
 
-    const photoUrl = `/uploads/${filename}`;
+    const photoUrl = publicUrl;
 
     // Persist to room_photos
     if (leadId) {

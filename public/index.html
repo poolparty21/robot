@@ -23,11 +23,6 @@
             100% { background-position: 0% 50%; }
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-        }
-
         @keyframes floatRotate {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
             25% { transform: translateY(-10px) rotate(2deg); }
@@ -45,24 +40,13 @@
         }
 
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(40px) scale(0.96); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        @keyframes wave {
-            0%, 100% { transform: rotate(-15deg); }
-            50% { transform: rotate(25deg); }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes bounce {
             0%, 80%, 100% { transform: translateY(0); }
             40% { transform: translateY(-8px); }
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
         }
 
         body {
@@ -71,346 +55,220 @@
             background-size: 400% 400%;
             animation: bgShift 15s ease infinite;
             min-height: 100vh;
-            overflow: hidden;
             color: #333;
+            overflow: hidden;
         }
 
         .orb {
             position: fixed;
             border-radius: 50%;
             filter: blur(80px);
-            opacity: 0.3;
+            opacity: 0.25;
             pointer-events: none;
             z-index: 0;
         }
+        .orb:nth-child(1) { width: 350px; height: 350px; background: #FFD93D; top: 5%; left: 5%; }
+        .orb:nth-child(2) { width: 280px; height: 280px; background: #FF8C42; bottom: 10%; right: 10%; }
+        .orb:nth-child(3) { width: 220px; height: 220px; background: #FF6B6B; top: 35%; left: 60%; }
 
-        .orb:nth-child(1) { width: 350px; height: 350px; background: #FFD93D; top: 5%; left: 5%; animation: float 10s ease-in-out infinite; }
-        .orb:nth-child(2) { width: 280px; height: 280px; background: #FF8C42; bottom: 10%; right: 10%; animation: float 12s ease-in-out infinite 1s; }
-        .orb:nth-child(3) { width: 220px; height: 220px; background: #FF6B6B; top: 40%; left: 60%; animation: float 14s ease-in-out infinite 2s; }
-
-        /* Email Gate */
-        #gate {
-            position: fixed;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        #gate.hidden {
-            opacity: 0;
-            pointer-events: none;
-            transform: scale(1.1);
-        }
-
-        .gate-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(40px);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            border-radius: 40px;
-            padding: 3.5rem;
-            max-width: 460px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.15);
-            animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .gate-card h1 {
-            color: #FFF;
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 0.75rem;
-            letter-spacing: -1px;
-        }
-
-        .gate-card p {
-            color: rgba(255, 255, 255, 0.85);
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: 2.5rem;
-        }
-
-        .email-form {
-            display: flex;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-        }
-
-        .email-form input {
-            flex: 1;
-            padding: 1.1rem 1.5rem;
-            border: 2px solid rgba(255, 255, 255, 0.35);
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.12);
-            color: #FFF;
-            font-size: 1rem;
-            outline: none;
-            transition: all 0.3s;
-        }
-
-        .email-form input::placeholder { color: rgba(255, 255, 255, 0.55); }
-        .email-form input:focus { background: rgba(255, 255, 255, 0.22); border-color: rgba(255, 255, 255, 0.7); }
-
-        .btn-glow {
-            padding: 1.1rem 2rem;
-            border: none;
-            border-radius: 20px;
-            background: #FFF;
-            color: var(--orange);
-            font-weight: 800;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            animation: pulseGlow 2.5s infinite;
-        }
-
-        .btn-glow:hover { transform: translateY(-2px) scale(1.03); }
-
-        /* Main App */
+        /* ── Layout ─────────────────────────────────── */
         .app {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
             position: relative;
             z-index: 1;
-            max-width: 700px;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            max-width: 720px;
             margin: 0 auto;
         }
 
-        .brand-mark {
-            position: absolute;
-            top: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            color: #FFF;
-            font-size: 1.3rem;
-            font-weight: 700;
-            opacity: 0.9;
-        }
-
-        .brand-mark i { color: var(--sunny); font-size: 1.5rem; }
-
-        /* Hero Input Form */
-        .hero-form {
-            width: 100%;
+        /* ── Top Hero Section (fixed height) ────────── */
+        .hero {
+            flex-shrink: 0;
+            padding: 1.25rem 1.5rem 0.75rem;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 1.5rem;
-            animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            gap: 0.4rem;
         }
 
-        /* Robot */
-        .robot-hero {
+        /* Brand */
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #FFF;
+            font-weight: 700;
+            font-size: 1.15rem;
+            opacity: 0.9;
+            margin-bottom: 0.25rem;
+        }
+        .brand i { color: var(--sunny); font-size: 1.3rem; }
+
+        /* Robot (smaller) */
+        .robot {
             position: relative;
-            width: 120px;
-            height: 140px;
+            width: 80px;
+            height: 95px;
             animation: floatRotate 4s ease-in-out infinite;
             cursor: pointer;
             transition: transform 0.3s;
+            margin-bottom: 0.15rem;
         }
+        .robot:hover { transform: scale(1.08); }
 
-        .robot-hero:hover { transform: scale(1.08); }
-
-        .robot-hero .antenna {
-            width: 5px;
-            height: 18px;
+        .robot .antenna {
+            width: 4px; height: 14px;
             background: linear-gradient(180deg, #ccc, #999);
             margin: 0 auto;
+            border-radius: 2px;
             position: relative;
-            border-radius: 3px;
         }
-
-        .robot-hero .antenna::after {
+        .robot .antenna::after {
             content: '';
             position: absolute;
-            top: -10px;
-            left: -7px;
-            width: 18px;
-            height: 18px;
+            top: -8px; left: -6px;
+            width: 16px; height: 16px;
             background: var(--sunny);
             border-radius: 50%;
-            box-shadow: 0 0 20px var(--sunny), 0 0 40px rgba(255, 217, 61, 0.4);
+            box-shadow: 0 0 18px var(--sunny);
             animation: pulseGlow 2s infinite;
         }
-
-        .robot-hero .head {
-            width: 85px;
-            height: 65px;
+        .robot .head {
+            width: 65px; height: 48px;
             background: linear-gradient(135deg, #FFF, #f0f0f0);
-            border-radius: 24px 24px 18px 18px;
+            border-radius: 18px 18px 14px 14px;
             margin: 0 auto;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.08), inset 0 -2px 8px rgba(0,0,0,0.04);
             position: relative;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.1), inset 0 -2px 10px rgba(0,0,0,0.05);
         }
-
-        .robot-hero .eyes {
+        .robot .eyes {
             display: flex;
             justify-content: center;
-            gap: 14px;
-            padding-top: 22px;
+            gap: 12px;
+            padding-top: 16px;
         }
-
-        .robot-hero .eye {
-            width: 16px;
-            height: 16px;
+        .robot .eye {
+            width: 13px; height: 13px;
             background: linear-gradient(135deg, var(--orange), var(--coral));
             border-radius: 50%;
-            position: relative;
             animation: blink 3.5s infinite;
         }
-
-        .robot-hero .eye:nth-child(2) { animation-delay: 0.5s; }
-
-        .robot-hero .eye::after {
+        .robot .eye:nth-child(2) { animation-delay: 0.5s; }
+        .robot .eye::after {
             content: '';
             position: absolute;
-            top: 3px;
-            left: 4px;
-            width: 5px;
-            height: 5px;
+            top: 3px; left: 4px;
+            width: 4px; height: 4px;
             background: #FFF;
             border-radius: 50%;
         }
-
-        .robot-hero .mouth {
-            width: 24px;
-            height: 8px;
+        .robot .mouth {
+            width: 18px; height: 6px;
             background: linear-gradient(90deg, var(--coral), var(--orange));
-            border-radius: 0 0 12px 12px;
-            margin: 10px auto 0;
+            border-radius: 0 0 10px 10px;
+            margin: 6px auto 0;
         }
-
-        .robot-hero .body {
-            width: 60px;
-            height: 45px;
+        .robot .body {
+            width: 44px; height: 32px;
             background: linear-gradient(135deg, #FFF, #e8e8e8);
-            border-radius: 14px;
-            margin: 5px auto 0;
-            position: relative;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border-radius: 10px;
+            margin: 3px auto 0;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.06);
             display: flex;
             align-items: center;
             justify-content: center;
         }
-
-        .robot-hero .screen {
-            width: 42px;
-            height: 24px;
+        .robot .screen {
+            width: 32px; height: 18px;
             background: linear-gradient(90deg, #1a1a2e, #2a2a3e);
-            border-radius: 8px;
+            border-radius: 6px;
             position: relative;
             overflow: hidden;
         }
-
-        .robot-hero .screen::before {
+        .robot .screen::before {
             content: '';
             position: absolute;
-            top: 8px;
-            left: 6px;
-            width: 10px;
-            height: 8px;
+            top: 5px; left: 5px;
+            width: 8px; height: 6px;
             background: #0f0;
             border-radius: 2px;
             animation: blink 2s infinite;
         }
-
-        .robot-hero .screen::after {
-            content: '';
+        .robot .arm-left, .robot .arm-right {
             position: absolute;
-            top: 8px;
-            right: 6px;
-            width: 20px;
-            height: 2px;
-            background: rgba(0, 255, 0, 0.3);
-            border-radius: 1px;
-        }
-
-        .robot-hero .arm-left, .robot-hero .arm-right {
-            position: absolute;
-            width: 10px;
-            height: 28px;
+            width: 8px; height: 20px;
             background: linear-gradient(180deg, #ddd, #bbb);
-            border-radius: 5px;
-            top: 75px;
+            border-radius: 4px;
+            top: 52px;
         }
-
-        .robot-hero .arm-left { left: 18px; transform-origin: top center; animation: wave 2.5s ease-in-out infinite; }
-        .robot-hero .arm-right { right: 18px; transform-origin: top center; animation: wave 2.5s ease-in-out infinite 1.2s; }
-
-        .robot-shadow {
-            width: 60px;
-            height: 8px;
-            background: rgba(0,0,0,0.15);
-            border-radius: 50%;
-            margin: 5px auto 0;
-            filter: blur(4px);
-        }
+        .robot .arm-left { left: 6px; transform: rotate(-25deg); }
+        .robot .arm-right { right: 6px; transform: rotate(25deg); }
 
         /* Headline */
-        .hero-headline { text-align: center; color: #FFF; }
-        .hero-headline h2 { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.5rem; letter-spacing: -0.5px; text-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .hero-headline p { font-size: 1rem; color: rgba(255, 255, 255, 0.8); line-height: 1.5; }
+        .headline {
+            text-align: center;
+            color: #FFF;
+            margin-bottom: 0.3rem;
+        }
+        .headline h2 {
+            font-size: 1.2rem;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .headline p {
+            font-size: 0.88rem;
+            color: rgba(255,255,255,0.8);
+            line-height: 1.4;
+        }
 
-        /* Input */
-        .input-hero { width: 100%; position: relative; }
-
-        .input-glow {
+        /* ── Input Bar ──────────────────────────────── */
+        .input-bar {
+            width: 100%;
+            max-width: 620px;
+            position: relative;
+            margin-top: 0.2rem;
+        }
+        .input-bar .glow {
             position: absolute;
-            inset: -4px;
+            inset: -3px;
             background: linear-gradient(135deg, var(--sunny), var(--orange), var(--coral));
-            border-radius: 28px;
-            opacity: 0.5;
-            filter: blur(12px);
+            border-radius: 20px;
+            opacity: 0.45;
+            filter: blur(10px);
             animation: pulseGlow 3s infinite;
             z-index: -1;
         }
-
         .input-box {
-            width: 100%;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border: 2px solid rgba(255, 255, 255, 0.8);
-            border-radius: 24px;
-            padding: 0.5rem 0.5rem 0.5rem 1.25rem;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.5);
+            gap: 0.4rem;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(16px);
+            border: 2px solid rgba(255,255,255,0.8);
+            border-radius: 18px;
+            padding: 0.35rem 0.35rem 0.35rem 1rem;
+            box-shadow: 0 6px 30px rgba(0,0,0,0.10);
             transition: all 0.3s;
         }
-
         .input-box:focus-within {
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15), 0 0 0 2px var(--sunny);
-            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15), 0 0 0 2px var(--sunny);
+            transform: translateY(-1px);
         }
-
         .input-box input {
             flex: 1;
             border: none;
             background: none;
             color: var(--dark);
-            font-size: 1.05rem;
+            font-size: 0.95rem;
             outline: none;
-            padding: 0.6rem 0;
+            padding: 0.5rem 0;
         }
-
-        .input-box input::placeholder { color: #bbb; font-size: 1rem; }
-
+        .input-box input::placeholder { color: #bbb; }
         .input-action {
-            width: 44px;
-            height: 44px;
-            border-radius: 14px;
+            width: 38px; height: 38px;
+            border-radius: 10px;
             border: none;
             background: #f5f5f5;
             color: #888;
@@ -418,17 +276,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.1rem;
+            font-size: 1rem;
             transition: all 0.3s;
             flex-shrink: 0;
         }
-
-        .input-action:hover { background: #eee; color: var(--orange); transform: scale(1.05); }
-
+        .input-action:hover { background: #eee; color: var(--orange); }
         .input-send {
-            width: 48px;
-            height: 48px;
-            border-radius: 16px;
+            width: 42px; height: 42px;
+            border-radius: 12px;
             border: none;
             background: linear-gradient(135deg, var(--orange), var(--coral));
             color: #FFF;
@@ -436,273 +291,297 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            box-shadow: 0 3px 12px rgba(255,107,107,0.3);
             flex-shrink: 0;
         }
+        .input-send:hover { transform: scale(1.06); box-shadow: 0 5px 18px rgba(255,107,107,0.45); }
 
-        .input-send:hover { transform: scale(1.08) rotate(-5deg); box-shadow: 0 6px 25px rgba(255, 107, 107, 0.5); }
-
-        /* Suggestions */
+        /* ── Suggestions ────────────────────────────── */
         .suggestions {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.6rem;
+            gap: 0.4rem;
             justify-content: center;
-            max-width: 100%;
+            margin-top: 0.5rem;
+            transition: opacity 0.4s, max-height 0.4s;
+            overflow: hidden;
+            max-height: 100px;
         }
-
+        .suggestions.hidden {
+            opacity: 0;
+            max-height: 0;
+            margin-top: 0;
+            pointer-events: none;
+        }
         .chip {
-            padding: 0.6rem 1.1rem;
-            border: 1.5px solid rgba(255, 255, 255, 0.4);
-            border-radius: 24px;
-            background: rgba(255, 255, 255, 0.12);
+            padding: 0.45rem 0.9rem;
+            border: 1.5px solid rgba(255,255,255,0.35);
+            border-radius: 20px;
+            background: rgba(255,255,255,0.10);
             color: #FFF;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.82rem;
             transition: all 0.3s;
-            backdrop-filter: blur(10px);
-            position: relative;
+            backdrop-filter: blur(8px);
+        }
+        .chip:hover { background: rgba(255,255,255,0.22); border-color: rgba(255,255,255,0.6); transform: translateY(-1px); }
+        .chip i { margin-right: 0.35rem; font-size: 0.78rem; }
+
+        /* ── Email Prompt ───────────────────────────── */
+        .email-prompt {
+            margin-top: 0.5rem;
+            max-height: 0;
             overflow: hidden;
+            transition: max-height 0.5s ease, opacity 0.5s ease;
+            opacity: 0;
+            width: 100%;
+            max-width: 620px;
         }
-
-        .chip::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.6s;
+        .email-prompt.show {
+            max-height: 120px;
+            opacity: 1;
         }
-
-        .chip:hover::before { transform: translateX(100%); }
-        .chip:hover { background: rgba(255, 255, 255, 0.25); border-color: rgba(255, 255, 255, 0.7); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .chip i { margin-right: 0.4rem; font-size: 0.85rem; }
-
-        /* Chat History (bottom, collapsed) */
-        .chat-history {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            max-width: 700px;
-            margin: 0 auto;
-            z-index: 10;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .chat-history.collapsed { transform: translateY(calc(100% - 50px)); }
-
-        .chat-toggle {
+        .email-prompt-inner {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 14px;
+            padding: 0.7rem 1rem;
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            padding: 0.75rem;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 16px 16px 0 0;
-            cursor: pointer;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-bottom: none;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--orange);
-            width: 160px;
-            margin: 0 auto;
+            gap: 0.6rem;
         }
+        .email-prompt-inner input {
+            flex: 1;
+            padding: 0.55rem 0.9rem;
+            border: 1.5px solid rgba(255,255,255,0.3);
+            border-radius: 10px;
+            background: rgba(255,255,255,0.12);
+            color: #FFF;
+            font-size: 0.85rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+        .email-prompt-inner input::placeholder { color: rgba(255,255,255,0.5); }
+        .email-prompt-inner input:focus { background: rgba(255,255,255,0.2); border-color: var(--sunny); }
+        .email-prompt-inner button {
+            padding: 0.55rem 1.1rem;
+            border: none;
+            border-radius: 10px;
+            background: #FFF;
+            color: var(--orange);
+            font-weight: 700;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        .email-prompt-inner button:hover { transform: translateY(-1px); box-shadow: 0 3px 12px rgba(0,0,0,0.1); }
+        .email-prompt-inner .skip {
+            background: none;
+            color: rgba(255,255,255,0.5);
+            font-weight: 400;
+            padding: 0.55rem 0.6rem;
+        }
+        .email-prompt-inner .skip:hover { color: #FFF; background: none; box-shadow: none; }
+        .email-prompt .thank-msg {
+            display: none;
+            color: rgba(255,255,255,0.85);
+            font-size: 0.85rem;
+            padding: 0.3rem 0;
+        }
+        .email-prompt .thank-msg i { color: var(--sunny); }
 
-        .chat-toggle i { transition: transform 0.3s; }
-        .chat-history.collapsed .chat-toggle i { transform: rotate(180deg); }
-
-        .chat-messages {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            max-height: 300px;
+        /* ── Chat Messages ──────────────────────────── */
+        .chat-area {
+            flex: 1;
             overflow-y: auto;
-            padding: 1rem;
+            padding: 0.5rem 1.5rem 1rem;
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
-            box-shadow: 0 -8px 30px rgba(0,0,0,0.1);
+            gap: 0.6rem;
+            scroll-behavior: smooth;
+        }
+        .chat-area:empty {
+            display: none;
         }
 
         .msg {
-            max-width: 85%;
-            padding: 0.875rem 1.1rem;
-            border-radius: 18px;
-            font-size: 0.9rem;
+            max-width: 88%;
+            padding: 0.7rem 1rem;
+            border-radius: 16px;
+            font-size: 0.88rem;
             line-height: 1.5;
             animation: slideUp 0.3s ease;
         }
+        .msg.bot {
+            align-self: flex-start;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(8px);
+            color: #333;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+        }
+        .msg.user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, var(--orange), var(--coral));
+            color: #FFF;
+            border-bottom-right-radius: 4px;
+        }
+        .msg-label {
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: var(--orange);
+            margin-bottom: 0.2rem;
+        }
+        .typing {
+            display: flex;
+            gap: 0.3rem;
+            padding: 0.4rem 0;
+        }
+        .typing span {
+            width: 7px; height: 7px;
+            background: var(--orange);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite;
+        }
+        .typing span:nth-child(1) { animation-delay: 0s; }
+        .typing span:nth-child(2) { animation-delay: 0.2s; }
+        .typing span:nth-child(3) { animation-delay: 0.4s; }
 
-        .msg.bot { align-self: flex-start; background: #f5f5f5; color: #333; border-bottom-left-radius: 4px; }
-        .msg.user { align-self: flex-end; background: linear-gradient(135deg, var(--orange), var(--coral)); color: #FFF; border-bottom-right-radius: 4px; }
-
-        .msg-label { font-size: 0.7rem; font-weight: 700; color: var(--orange); margin-bottom: 0.25rem; }
-
+        /* ── Magic Cards (inline in chat) ───────────── */
         .magic-card {
             background: linear-gradient(135deg, #FFF 0%, var(--cream) 100%);
             border: 2px solid var(--sunny);
-            border-radius: 16px;
-            padding: 1.25rem;
-            margin-top: 0.5rem;
+            border-radius: 14px;
+            padding: 1rem;
+            margin-top: 0.3rem;
         }
-
-        .magic-title { font-weight: 800; color: var(--deep); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
-
-        .big-num { font-size: 2.5rem; font-weight: 900; color: var(--deep); text-align: center; }
-
-        .plat-grid { display: grid; grid-template-columns: 1fr; gap: 0.6rem; margin-top: 0.75rem; }
-
-        .plat-box { background: #FFF; border-radius: 12px; padding: 0.875rem; text-align: center; }
-        .plat-box .icon { font-size: 1.3rem; margin-bottom: 0.3rem; }
+        .magic-title { font-weight: 800; color: var(--deep); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem; }
+        .big-num { font-size: 2.2rem; font-weight: 900; color: var(--deep); text-align: center; }
+        .plat-box { background: #FFF; border-radius: 10px; padding: 0.7rem; text-align: center; margin-top: 0.5rem; }
+        .plat-box .icon { font-size: 1.2rem; margin-bottom: 0.2rem; }
         .plat-box.airbnb .icon { color: #FF5A5F; }
         .plat-box .amt { font-size: 1.1rem; font-weight: 800; color: #333; }
-        .plat-box .tag { font-size: 0.7rem; color: #999; }
+        .plat-box .tag { font-size: 0.68rem; color: #999; }
 
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+        .stat-box { background: #f8f8f8; border-radius: 10px; padding: 0.7rem; text-align: center; }
+        .stat-val { font-size: 1.2rem; font-weight: 800; color: var(--deep); }
+        .stat-lbl { font-size: 0.65rem; color: #999; margin-top: 0.15rem; text-transform: uppercase; }
 
-        .stat-box { background: #f8f8f8; border-radius: 12px; padding: 0.875rem; text-align: center; }
-        .stat-val { font-size: 1.3rem; font-weight: 800; color: var(--deep); }
-        .stat-lbl { font-size: 0.7rem; color: #999; margin-top: 0.2rem; text-transform: uppercase; }
-
-        /* Infos Tab */
+        /* ── Infos Tab ──────────────────────────────── */
         .infos-tab {
             position: fixed;
             right: 0;
             top: 50%;
-            transform: translateY(-50%) translateX(calc(100% - 48px));
+            transform: translateY(-50%) translateX(calc(100% - 42px));
             z-index: 100;
             transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
         .infos-tab.open { transform: translateY(-50%) translateX(0); }
-
         .infos-handle {
             position: absolute;
-            left: 0;
-            top: 50%;
+            left: 0; top: 50%;
             transform: translateY(-50%);
-            width: 48px;
-            height: 120px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 16px 0 0 16px;
+            width: 42px; height: 100px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(16px);
+            border-radius: 14px 0 0 14px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 0.4rem;
+            gap: 0.3rem;
             cursor: pointer;
-            box-shadow: -4px 0 20px rgba(0,0,0,0.08);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: -3px 0 16px rgba(0,0,0,0.06);
+            border: 1px solid rgba(255,255,255,0.5);
             border-right: none;
-            transition: all 0.3s;
+            transition: width 0.3s;
         }
-
-        .infos-handle:hover { width: 52px; }
-        .infos-handle i { color: var(--orange); font-size: 1.1rem; }
-
-        .infos-handle .handle-text {
-            writing-mode: vertical-rl;
-            text-orientation: mixed;
-            font-size: 0.7rem;
-            font-weight: 800;
-            color: var(--orange);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
+        .infos-handle:hover { width: 46px; }
+        .infos-handle i { color: var(--orange); font-size: 1rem; }
+        .infos-handle .handle-text { writing-mode: vertical-rl; font-size: 0.65rem; font-weight: 800; color: var(--orange); letter-spacing: 2px; text-transform: uppercase; }
         .infos-panel {
-            margin-left: 48px;
-            width: 300px;
-            height: 70vh;
-            max-height: 520px;
-            background: rgba(255, 255, 255, 0.97);
-            backdrop-filter: blur(30px);
-            border-radius: 20px 0 0 20px;
-            box-shadow: -10px 0 40px rgba(0,0,0,0.1);
+            margin-left: 42px;
+            width: 280px;
+            height: 65vh;
+            max-height: 480px;
+            background: rgba(255,255,255,0.97);
+            backdrop-filter: blur(24px);
+            border-radius: 16px 0 0 16px;
+            box-shadow: -8px 0 30px rgba(0,0,0,0.08);
             overflow: hidden;
             display: flex;
             flex-direction: column;
         }
-
         .infos-header {
-            padding: 1.25rem;
+            padding: 1rem;
             background: linear-gradient(135deg, var(--orange), var(--coral));
             color: #FFF;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
-
-        .infos-header h3 { font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem; }
-
-        .infos-close { width: 32px; height: 32px; border-radius: 50%; border: none; background: rgba(255,255,255,0.2); color: #FFF; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-
-        .infos-content { flex: 1; overflow-y: auto; padding: 1rem; }
-
-        .infos-section { margin-bottom: 1.5rem; }
-
-        .infos-section-title { font-size: 0.7rem; font-weight: 800; color: #bbb; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 0.75rem; }
-
-        .info-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.875rem; background: #f8f8f8; border-radius: 12px; margin-bottom: 0.5rem; text-decoration: none; color: #333; transition: all 0.3s; border: 1px solid transparent; }
-
-        .info-link:hover { transform: translateX(4px); border-color: var(--sunny); }
-
-        .info-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+        .infos-header h3 { font-size: 1rem; display: flex; align-items: center; gap: 0.4rem; }
+        .infos-close { width: 28px; height: 28px; border-radius: 50%; border: none; background: rgba(255,255,255,0.2); color: #FFF; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .infos-content { flex: 1; overflow-y: auto; padding: 0.9rem; }
+        .infos-section { margin-bottom: 1.2rem; }
+        .infos-section-title { font-size: 0.65rem; font-weight: 800; color: #bbb; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 0.6rem; }
+        .info-link {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.7rem;
+            background: #f8f8f8;
+            border-radius: 10px;
+            margin-bottom: 0.4rem;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+        .info-link:hover { transform: translateX(3px); border-color: var(--sunny); }
+        .info-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
         .info-icon.airbnb { background: #FFE8E8; color: #FF5A5F; }
-
         .info-text { flex: 1; }
-        .info-text div:first-child { font-weight: 700; font-size: 0.9rem; }
-        .info-text div:last-child { font-size: 0.75rem; color: #999; margin-top: 0.15rem; }
+        .info-text div:first-child { font-weight: 700; font-size: 0.85rem; }
+        .info-text div:last-child { font-size: 0.72rem; color: #999; margin-top: 0.1rem; }
+        .host-cta { background: linear-gradient(135deg, var(--orange), var(--coral)); border-radius: 12px; padding: 1rem; color: #FFF; text-align: center; cursor: pointer; transition: all 0.3s; margin-top: 0.4rem; }
+        .host-cta:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(232,93,4,0.25); }
+        .host-cta i { font-size: 1.4rem; margin-bottom: 0.3rem; }
+        .host-cta div:first-of-type { font-weight: 800; font-size: 0.9rem; }
+        .host-cta div:last-child { font-size: 0.75rem; opacity: 0.9; margin-top: 0.15rem; }
 
-        .host-cta { background: linear-gradient(135deg, var(--orange), var(--coral)); border-radius: 14px; padding: 1.25rem; color: #FFF; text-align: center; cursor: pointer; transition: all 0.3s; margin-top: 0.5rem; }
-        .host-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(232, 93, 4, 0.3); }
-        .host-cta i { font-size: 1.6rem; margin-bottom: 0.4rem; }
-        .host-cta div:first-of-type { font-weight: 800; font-size: 0.95rem; }
-        .host-cta div:last-child { font-size: 0.8rem; opacity: 0.9; margin-top: 0.2rem; }
-
-        /* Modal */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: none; align-items: center; justify-content: center; z-index: 500; backdrop-filter: blur(8px); }
+        /* ── Settings Modal ─────────────────────────── */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.35); display: none; align-items: center; justify-content: center; z-index: 500; backdrop-filter: blur(6px); }
         .modal-overlay.active { display: flex; }
-
-        .modal { background: #FFF; border-radius: 28px; padding: 2.5rem; max-width: 420px; width: 90%; box-shadow: 0 30px 60px rgba(0,0,0,0.2); animation: slideUp 0.4s ease; }
-        .modal h2 { color: var(--deep); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; }
-
-        .field { margin-bottom: 1.25rem; }
-        .field label { display: block; font-size: 0.85rem; font-weight: 700; color: #888; margin-bottom: 0.5rem; }
-        .field input { width: 100%; padding: 0.875rem 1.125rem; border: 2px solid #eee; border-radius: 14px; font-size: 0.95rem; outline: none; transition: all 0.3s; }
+        .modal { background: #FFF; border-radius: 24px; padding: 2rem; max-width: 380px; width: 90%; box-shadow: 0 24px 50px rgba(0,0,0,0.18); animation: slideUp 0.35s ease; }
+        .modal h2 { color: var(--deep); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.4rem; font-size: 1.1rem; }
+        .field { margin-bottom: 1rem; }
+        .field label { display: block; font-size: 0.82rem; font-weight: 700; color: #888; margin-bottom: 0.4rem; }
+        .field input { width: 100%; padding: 0.75rem 1rem; border: 2px solid #eee; border-radius: 12px; font-size: 0.9rem; outline: none; transition: all 0.3s; }
         .field input:focus { border-color: var(--orange); }
-
-        .field .info-note { font-size: 0.8rem; color: #999; margin-top: 0.25rem; padding-left: 0.125rem; }
-
-        .modal-actions { display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 2rem; }
-
-        .btn-text { padding: 0.7rem 1.3rem; border: none; background: none; color: #888; cursor: pointer; font-size: 0.95rem; border-radius: 12px; }
+        .field .info-note { font-size: 0.75rem; color: #999; margin-top: 0.2rem; }
+        .modal-actions { display: flex; gap: 0.6rem; justify-content: flex-end; margin-top: 1.5rem; }
+        .btn-text { padding: 0.6rem 1.1rem; border: none; background: none; color: #888; cursor: pointer; font-size: 0.9rem; border-radius: 10px; transition: background 0.3s; }
         .btn-text:hover { background: #f5f5f5; }
+        .btn-primary { padding: 0.6rem 1.3rem; border: none; border-radius: 10px; background: linear-gradient(135deg, var(--orange), var(--coral)); color: #FFF; cursor: pointer; font-weight: 700; font-size: 0.9rem; transition: all 0.3s; }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,107,107,0.35); }
 
-        .btn-primary { padding: 0.7rem 1.5rem; border: none; border-radius: 12px; background: linear-gradient(135deg, var(--orange), var(--coral)); color: #FFF; cursor: pointer; font-weight: 700; font-size: 0.95rem; transition: all 0.3s; }
-        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(255,107,107,0.4); }
-
-        /* Typing */
-        .typing { display: flex; gap: 0.3rem; padding: 0.5rem; }
-        .typing span { width: 8px; height: 8px; background: var(--orange); border-radius: 50%; animation: bounce 1.4s infinite; }
-        .typing span:nth-child(1) { animation-delay: 0s; }
-        .typing span:nth-child(2) { animation-delay: 0.2s; }
-        .typing span:nth-child(3) { animation-delay: 0.4s; }
-
-        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.08); border-radius: 8px; }
 
         @media (max-width: 640px) {
-            .hero-headline h2 { font-size: 1.3rem; }
-            .infos-panel { width: 260px; }
-            .chip { font-size: 0.8rem; padding: 0.5rem 1rem; }
+            .hero { padding: 1rem 1rem 0.5rem; }
+            .headline h2 { font-size: 1.05rem; }
+            .headline p { font-size: 0.8rem; }
+            .chat-area { padding: 0.5rem 1rem 1rem; }
+            .infos-panel { width: 250px; }
+            .chip { font-size: 0.75rem; padding: 0.4rem 0.75rem; }
         }
 
         .hidden { display: none !important; }
@@ -713,19 +592,6 @@
     <div class="orb"></div>
     <div class="orb"></div>
 
-    <!-- Email Gate -->
-    <div id="gate">
-        <div class="gate-card">
-            <h1>☀️ SunnyHost</h1>
-            <p>Discover how much your space could earn. Our AI analyzes your room, location, and market trends.</p>
-            <div class="email-form">
-                <input type="email" id="emailInput" placeholder="your@email.com" onkeypress="if(event.key==='Enter') unlock()">
-                <button class="btn-glow" onclick="unlock()"><i class="fas fa-arrow-right"></i></button>
-            </div>
-            <p style="font-size: 0.8rem; color: rgba(255,255,255,0.6);"><i class="fas fa-bolt"></i> No confirmation needed. Instant access.</p>
-        </div>
-    </div>
-
     <!-- Settings Modal -->
     <div class="modal-overlay" id="settingsModal" onclick="if(event.target===this) closeSettings()">
         <div class="modal">
@@ -733,7 +599,7 @@
             <div class="field">
                 <label><i class="fas fa-tag"></i> Affiliate ID</label>
                 <input type="text" id="affIdInput" placeholder="sidebusiness">
-                <div class="info-note">Affiliate URL is managed server-side for security.</div>
+                <div class="info-note">Affiliate URL is managed server-side.</div>
             </div>
             <div class="modal-actions">
                 <button class="btn-text" onclick="closeSettings()">Cancel</button>
@@ -760,7 +626,7 @@
                     <a href="#" class="info-link" onclick="track()">
                         <div class="info-icon airbnb"><i class="fab fa-airbnb"></i></div>
                         <div class="info-text"><div>Airbnb</div><div>Sign up & start hosting</div></div>
-                        <i class="fas fa-external-link-alt" style="color: #ddd; font-size: 0.8rem;"></i>
+                        <i class="fas fa-external-link-alt" style="color: #ddd; font-size: 0.75rem;"></i>
                     </a>
                 </div>
                 <div class="infos-section">
@@ -785,12 +651,11 @@
     </div>
 
     <!-- Main App -->
-    <div class="app" id="app" style="display: none;">
-        <div class="brand-mark"><i class="fas fa-sun"></i><span>SunnyHost</span></div>
-
-        <!-- Hero: Robot + Input Form -->
-        <div class="hero-form">
-            <div class="robot-hero" onclick="sendQuick('Hey Sunny!')">
+    <div class="app">
+        <!-- Top Hero -->
+        <div class="hero">
+            <div class="brand"><i class="fas fa-sun"></i><span>SunnyHost</span></div>
+            <div class="robot" onclick="sendQuick('Hey Sunny!')">
                 <div class="antenna"></div>
                 <div class="head">
                     <div class="eyes"><div class="eye"></div><div class="eye"></div></div>
@@ -799,40 +664,46 @@
                 <div class="body"><div class="screen"></div></div>
                 <div class="arm-left"></div>
                 <div class="arm-right"></div>
-                <div class="robot-shadow"></div>
             </div>
-
-            <div class="hero-headline">
+            <div class="headline" id="headline">
                 <h2>Hey, I'm Sunny! 👋</h2>
-                <p>Tell me about your space and I'll show you exactly<br>how much you could earn on Airbnb</p>
+                <p>Tell me about your space — I'll estimate your Airbnb income</p>
             </div>
 
-            <div class="input-hero">
-                <div class="input-glow"></div>
+            <!-- Input Bar -->
+            <div class="input-bar">
+                <div class="glow"></div>
                 <div class="input-box">
-                    <input type="text" id="chatInput" placeholder="I have a spare room, can I earn money with it?" onkeypress="if(event.key==='Enter') send()">
-                    <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="handleFile(event)">
+                    <input type="text" id="chatInput" placeholder="I have a spare room, can I earn money?" onkeypress="if(event.key==='Enter') send()">
+                    <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleFile(event)">
                     <button class="input-action" onclick="document.getElementById('fileInput').click()" title="Upload photo"><i class="fas fa-image"></i></button>
                     <button class="input-action" onclick="openSettings()" title="Settings"><i class="fas fa-cog"></i></button>
                     <button class="input-send" onclick="send()" title="Send"><i class="fas fa-paper-plane"></i></button>
                 </div>
             </div>
 
+            <!-- Suggestions -->
             <div class="suggestions" id="suggestions">
-                <button class="chip" onclick="fillInput('I have a spare room, can I earn money with it?')"><i class="fas fa-bed"></i> I have a spare room</button>
-                <button class="chip" onclick="fillInput('I want to start earning $10,000 a month extra, what do I have to do?')"><i class="fas fa-fire"></i> Earn $10K/month</button>
-                <button class="chip" onclick="fillInput('Show me my income potential')"><i class="fas fa-calculator"></i> Check income</button>
-                <button class="chip" onclick="fillInput('How do I become a host?')"><i class="fas fa-home"></i> Become a host</button>
-                <button class="chip" onclick="fillInput('Upload my room photo')"><i class="fas fa-camera"></i> Upload photo</button>
-                <button class="chip" onclick="fillInput('Pin my location on the map')"><i class="fas fa-map-pin"></i> Set location</button>
+                <button class="chip" onclick="fillInput('I have a spare room, can I earn money?')"><i class="fas fa-bed"></i> Spare room</button>
+                <button class="chip" onclick="fillInput('Show me my income potential')"><i class="fas fa-calculator"></i> Income</button>
+                <button class="chip" onclick="fillInput('How do I become a host?')"><i class="fas fa-home"></i> Become host</button>
+                <button class="chip" onclick="fillInput('Upload my room photo')"><i class="fas fa-camera"></i> Photo</button>
+                <button class="chip" onclick="fillInput('Pin my location on the map')"><i class="fas fa-map-pin"></i> Location</button>
+            </div>
+
+            <!-- Email Prompt (appears after a few messages) -->
+            <div class="email-prompt" id="emailPrompt">
+                <div class="email-prompt-inner" id="emailPromptForm">
+                    <input type="email" id="emailInput" placeholder="your@email.com — save your results">
+                    <button onclick="captureEmail()">Save</button>
+                    <button class="skip" onclick="dismissEmailPrompt()">Skip</button>
+                </div>
+                <div class="thank-msg" id="emailThank">✅ <span id="emailDisplay"></span> — we'll save your stats!</div>
             </div>
         </div>
 
-        <!-- Chat History (bottom, collapsed) -->
-        <div class="chat-history collapsed" id="chatHistory">
-            <div class="chat-toggle" onclick="toggleChat()"><i class="fas fa-chevron-up"></i><span>Chat History</span></div>
-            <div class="chat-messages" id="chatMessages"></div>
-        </div>
+        <!-- Chat Messages Area (scrollable) -->
+        <div class="chat-area" id="chatMessages"></div>
     </div>
 
     <script>
@@ -840,84 +711,13 @@
         let referralUrl = localStorage.getItem('affUrl') || '';
         let history = [];
         let stats = { income: 0, occ: 0, rate: 0, days: 0 };
+        let msgCount = 0;
+        let emailCaptured = false;
 
-        // ── Email Gate ─────────────────────────────────
+        // ── Init ────────────────────────────────────────
 
-        function shake(el) {
-            el.style.animation = 'none';
-            el.offsetHeight;
-            el.style.animation = 'shake 0.5s ease';
-            setTimeout(() => el.style.animation = 'slideUp 0.8s ease', 500);
-        }
-
-        async function unlock() {
-            const val = document.getElementById('emailInput').value.trim();
-            if (!val.includes('@')) {
-                shake(document.querySelector('.gate-card'));
-                return;
-            }
-            email = val;
-
-            try {
-                // Create lead via API (sets httpOnly cookie)
-                const leadRes = await fetch('/api/leads', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email })
-                });
-
-                if (leadRes.ok) {
-                    const leadData = await leadRes.json();
-                    console.log('Lead created:', leadData.leadId);
-                }
-
-                // Auto affiliate signup (server generates the URL)
-                await autoSignupAffiliate(email);
-            } catch (e) {
-                console.log('Lead creation failed, continuing in offline mode:', e);
-            }
-
-            // Reveal the app
-            document.getElementById('gate').classList.add('hidden');
-            document.getElementById('app').style.display = 'flex';
-            setTimeout(() => document.getElementById('chatInput').focus(), 600);
-        }
-
-        async function autoSignupAffiliate(email) {
-            try {
-                const res = await fetch('/api/affiliate/signup', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email })
-                });
-                if (res.ok) {
-                    const data = await res.json();
-                    referralUrl = data.referralUrl;
-                    localStorage.setItem('affUrl', referralUrl);
-                    console.log('Affiliate URL ready:', referralUrl);
-                }
-            } catch (e) {
-                console.log('Affiliate signup unavailable:', e);
-            }
-        }
-
-        // ── UI Toggles ─────────────────────────────────
-
-        function toggleChat() {
-            document.getElementById('chatHistory').classList.toggle('collapsed');
-        }
-
-        function toggleInfos() {
-            const tab = document.getElementById('infosTab');
-            const icon = document.getElementById('infosIcon');
-            tab.classList.toggle('open');
-            icon.className = tab.classList.contains('open') ? 'fas fa-chevron-right' : 'fas fa-chevron-left';
-        }
-
-        function fillInput(text) {
-            document.getElementById('chatInput').value = text;
-            document.getElementById('chatInput').focus();
-        }
+        document.getElementById('chatInput').focus();
+        loadStats();
 
         // ── Chat Messages ──────────────────────────────
 
@@ -928,12 +728,13 @@
             if (html) {
                 div.innerHTML = html;
             } else {
-                div.innerHTML = '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div>' +
-                    text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
+                let formatted = text
+                    .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+                    .replace(/\n/g, '<br>');
+                div.innerHTML = '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div>' + formatted;
             }
             area.appendChild(div);
             area.scrollTop = area.scrollHeight;
-            document.getElementById('chatHistory').classList.remove('collapsed');
             return div;
         }
 
@@ -944,17 +745,24 @@
             div.textContent = text;
             area.appendChild(div);
             area.scrollTop = area.scrollHeight;
-            document.getElementById('chatHistory').classList.remove('collapsed');
+            msgCount++;
+            // Show email prompt after 3 messages if not captured yet
+            if (msgCount >= 3 && !emailCaptured) {
+                showEmailPrompt();
+            }
+            // Hide suggestions on first message
+            if (msgCount === 1) {
+                document.getElementById('suggestions').classList.add('hidden');
+            }
         }
 
         function showTyping() {
             const area = document.getElementById('chatMessages');
             const div = document.createElement('div');
             div.className = 'msg bot typing-indicator';
-            div.innerHTML = '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div><div class="typing"><span></span><span></span><span></span></div>';
+            div.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
             area.appendChild(div);
             area.scrollTop = area.scrollHeight;
-            document.getElementById('chatHistory').classList.remove('collapsed');
             return div;
         }
 
@@ -963,53 +771,125 @@
             if (el) el.remove();
         }
 
-        // ── Main Send ──────────────────────────────────
+        // ── Email Capture (asks later, no gate) ─────────
 
-        async function send() {
+        function showEmailPrompt() {
+            document.getElementById('emailPrompt').classList.add('show');
+        }
+
+        function dismissEmailPrompt() {
+            document.getElementById('emailPrompt').classList.remove('show');
+        }
+
+        async function captureEmail() {
+            const val = document.getElementById('emailInput').value.trim();
+            if (!val || !val.includes('@')) {
+                document.getElementById('emailInput').style.borderColor = '#FF6B6B';
+                setTimeout(() => document.getElementById('emailInput').style.borderColor = '', 1500);
+                return;
+            }
+            email = val;
+            emailCaptured = true;
+
+            // Call /api/leads in background
+            try {
+                await fetch('/api/leads', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+            } catch (e) {
+                console.log('Lead creation failed:', e);
+            }
+
+            // Also auto affiliate signup
+            try {
+                const res = await fetch('/api/affiliate/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    referralUrl = data.referralUrl;
+                    localStorage.setItem('affUrl', referralUrl);
+                }
+            } catch (e) {
+                console.log('Affiliate signup unavailable:', e);
+            }
+
+            // Show thank you
+            document.getElementById('emailPromptForm').style.display = 'none';
+            document.getElementById('emailDisplay').textContent = email;
+            document.getElementById('emailThank').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('emailPrompt').classList.remove('show');
+                setTimeout(() => {
+                    document.getElementById('emailPromptForm').style.display = 'flex';
+                    document.getElementById('emailThank').style.display = 'none';
+                }, 300);
+            }, 2500);
+
+            // Notify in chat
+            botMsg('Great, ' + email.split('@')[0] + '! Your results will be saved. 🎉');
+        }
+
+        // ── Send / Handle Intent ────────────────────────
+
+        function send() {
             const input = document.getElementById('chatInput');
             const text = input.value.trim();
             if (!text) return;
             input.value = '';
             userMsg(text);
-            await handleIntent(text);
+            handleIntent(text);
         }
 
         function sendQuick(text) {
+            if (!emailCaptured && msgCount === 0) {
+                // Auto-show email after quick tap if none captured yet
+            }
+            document.getElementById('chatInput').value = '';
             userMsg(text);
             handleIntent(text);
+        }
+
+        function fillInput(text) {
+            document.getElementById('chatInput').value = text;
+            document.getElementById('chatInput').focus();
         }
 
         async function handleIntent(text) {
             const t = showTyping();
             const low = text.toLowerCase();
 
-            // Check for photo upload intent
+            // Photo upload
             if (low.indexOf('photo') !== -1 || low.indexOf('upload') !== -1 || low.indexOf('picture') !== -1) {
-                setTimeout(function() { removeTyping(); showUpload(); }, 600);
+                setTimeout(function() { removeTyping(); showUpload(); }, 500);
                 return;
             }
-            // Check for income / earn intent
+            // Income / earn
             if (low.indexOf('income') !== -1 || low.indexOf('earn') !== -1 || low.indexOf('money') !== -1 || low.indexOf('potential') !== -1 || low.indexOf('10,000') !== -1 || low.indexOf('10k') !== -1) {
-                setTimeout(function() { removeTyping(); showIncome(); }, 800);
+                setTimeout(function() { removeTyping(); showIncome(); }, 600);
                 return;
             }
-            // Map / location intent
+            // Map / location
             if (low.indexOf('map') !== -1 || low.indexOf('location') !== -1 || low.indexOf('pin') !== -1 || low.indexOf('where') !== -1) {
-                setTimeout(function() { removeTyping(); showMap(); }, 700);
+                setTimeout(function() { removeTyping(); showMap(); }, 500);
                 return;
             }
-            // Analytics intent
+            // Analytics / market
             if (low.indexOf('analytic') !== -1 || low.indexOf('market') !== -1 || low.indexOf('stat') !== -1 || low.indexOf('data') !== -1) {
-                setTimeout(function() { removeTyping(); showAnalytics(); }, 900);
+                setTimeout(function() { removeTyping(); showAnalytics(); }, 700);
                 return;
             }
-            // Host / become intent
+            // Host / become
             if (low.indexOf('host') !== -1 || low.indexOf('become') !== -1 || low.indexOf('start') !== -1 || low.indexOf('begin') !== -1) {
-                setTimeout(function() { removeTyping(); showHostInfo(); }, 700);
+                setTimeout(function() { removeTyping(); showHostInfo(); }, 500);
                 return;
             }
 
-            // General Q&A — always calls server-side AI
+            // General AI chat
             try {
                 const reply = await fetchGroq(text);
                 removeTyping();
@@ -1020,7 +900,7 @@
             }
         }
 
-        // ── Local fallback (when AI is unavailable) ─────
+        // ── Local Fallback ──────────────────────────────
 
         function getLocalReply(text) {
             const low = text.toLowerCase();
@@ -1040,7 +920,7 @@
             return replies[Math.floor(Math.random() * replies.length)];
         }
 
-        // ── AI Chat (via server proxy) ──────────────────
+        // ── AI Chat ─────────────────────────────────────
 
         async function fetchGroq(text) {
             const res = await fetch('/api/chat', {
@@ -1062,14 +942,13 @@
 
         function showUpload() {
             const id = 'up-' + Date.now();
-            botMsg(null, '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div><div style="border: 2px dashed #FFD93D; border-radius: 16px; padding: 2rem; text-align: center; background: rgba(255,255,255,0.5); cursor: pointer;" onclick="document.getElementById(\'' + id + '\').click()"><i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: #FF8C42; margin-bottom: 0.5rem;"></i><div style="font-weight: 700;">Drop your room photo here</div><div style="font-size: 0.85rem; color: #888;">or click to browse</div></div><input type="file" id="' + id + '" accept="image/*" style="display:none" onchange="handleFileDirect(event, \'' + id + '\')">');
+            botMsg(null, '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div><div style="border:2px dashed #FFD93D;border-radius:14px;padding:1.5rem;text-align:center;background:rgba(255,255,255,0.4);cursor:pointer;" onclick="document.getElementById(\'' + id + '\').click()"><i class="fas fa-cloud-upload-alt" style="font-size:1.8rem;color:#FF8C42;margin-bottom:0.4rem;"></i><div style="font-weight:700;">Drop your room photo here</div><div style="font-size:0.8rem;color:#888;">or click to browse</div></div><input type="file" id="' + id + '" accept="image/*" style="display:none" onchange="handleFileDirect(event, \'' + id + '\')">');
         }
 
         function handleFile(event) {
             const file = event.target.files[0];
             if (file) processImage(file);
         }
-
         function handleFileDirect(event, id) {
             const file = event.target.files[0];
             if (file) processImage(file);
@@ -1078,25 +957,16 @@
         async function processImage(file) {
             const formData = new FormData();
             formData.append('photo', file);
-
-            // Show local preview immediately
             const reader = new FileReader();
             reader.onload = function(e) {
                 const preview = e.target.result;
-                botMsg(null, '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div><div>Analyzing your space...</div><img src="' + preview + '" style="width: 100%; border-radius: 12px; margin-top: 0.5rem;" alt="Room">');
+                botMsg(null, '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div><div>Analyzing your space...</div><img src="' + preview + '" style="width:100%;border-radius:10px;margin-top:0.4rem;" alt="Room">');
             };
             reader.readAsDataURL(file);
-
-            // Upload to server for AI analysis
             try {
-                const res = await fetch('/api/photo', {
-                    method: 'POST',
-                    body: formData
-                });
-
+                const res = await fetch('/api/photo', { method: 'POST', body: formData });
                 if (res.ok) {
                     const data = await res.json();
-                    // Update the last bot message with analysis
                     const msgs = document.getElementById('chatMessages');
                     const lastMsg = msgs.lastElementChild;
                     if (lastMsg && lastMsg.classList.contains('bot')) {
@@ -1106,7 +976,7 @@
                         } else {
                             html += '<div>Beautiful space! Here is what I see:<br>• Natural light<br>• Cozy vibe<br>• Good proportions</div>';
                         }
-                        html += '<div style="margin-top: 0.75rem;">This room could earn <b>$1,200-1,800/month</b>. Want the full breakdown?</div>';
+                        html += '<div style="margin-top:0.5rem;">This room could earn <b>$1,200-1,800/month</b>. Want the full breakdown?</div>';
                         lastMsg.innerHTML = html;
                     }
                 }
@@ -1115,7 +985,7 @@
             }
         }
 
-        // ── Income Estimate (via server) ───────────────
+        // ── Income Estimate ─────────────────────────────
 
         async function showIncome() {
             try {
@@ -1124,7 +994,6 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({})
                 });
-
                 if (res.ok) {
                     const data = await res.json();
                     stats.income = data.monthlyIncome;
@@ -1132,31 +1001,24 @@
                     stats.occ = data.occupancy;
                     stats.days = data.daysToBooking;
                     updateStats();
-
-                    botMsg(null, '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div><div class="magic-card"><div class="magic-title"><i class="fas fa-calculator"></i> Your Income Potential</div><div style="text-align: center; color: #888; font-size: 0.85rem;">Estimated Monthly Earnings</div><div class="big-num">$' + data.monthlyIncome.toLocaleString() + '</div><div class="plat-grid"><div class="plat-box airbnb"><div class="icon"><i class="fab fa-airbnb"></i></div><div class="amt">$' + data.airbnbEstimate.toLocaleString() + '</div><div class="tag">Airbnb</div></div></div><div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eee; font-size: 0.8rem; color: #666; text-align: center;"><i class="fas fa-lightbulb" style="color: #FFD93D;"></i> Pro tip: Quality photos and fast responses boost earnings!</div></div>');
+                    botMsg(null, '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div><div class="magic-card"><div class="magic-title"><i class="fas fa-calculator"></i> Your Income Potential</div><div style="text-align:center;color:#888;font-size:0.82rem;">Estimated Monthly Earnings</div><div class="big-num">$' + data.monthlyIncome.toLocaleString() + '</div><div class="plat-box airbnb"><div class="icon"><i class="fab fa-airbnb"></i></div><div class="amt">$' + data.airbnbEstimate.toLocaleString() + '</div><div class="tag">Airbnb</div></div><div style="margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid #eee;font-size:0.78rem;color:#666;text-align:center;"><i class="fas fa-lightbulb" style="color:#FFD93D;"></i> Quality photos & fast responses boost earnings!</div></div>');
                     return;
                 }
             } catch (e) {
                 console.log('Estimate API failed, using local fallback');
             }
-
-            // Fallback: local random calculation
             const base = Math.floor(Math.random() * 1200) + 800;
             const airbnb = Math.floor(base * 1.25);
-            stats.income = base;
-            stats.rate = Math.floor(base / 22);
-            stats.occ = 87;
-            stats.days = Math.floor(Math.random() * 10) + 5;
+            stats.income = base; stats.rate = Math.floor(base / 22); stats.occ = 87; stats.days = Math.floor(Math.random() * 10) + 5;
             updateStats();
-
-            botMsg(null, '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div><div class="magic-card"><div class="magic-title"><i class="fas fa-calculator"></i> Your Income Potential</div><div style="text-align: center; color: #888; font-size: 0.85rem;">Estimated Monthly Earnings</div><div class="big-num">$' + base.toLocaleString() + '</div><div class="plat-grid"><div class="plat-box airbnb"><div class="icon"><i class="fab fa-airbnb"></i></div><div class="amt">$' + airbnb.toLocaleString() + '</div><div class="tag">Airbnb</div></div></div><div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eee; font-size: 0.8rem; color: #666; text-align: center;"><i class="fas fa-lightbulb" style="color: #FFD93D;"></i> Pro tip: Quality photos and fast responses boost earnings!</div></div>');
+            botMsg(null, '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div><div class="magic-card"><div class="magic-title"><i class="fas fa-calculator"></i> Your Income Potential</div><div style="text-align:center;color:#888;font-size:0.82rem;">Estimated Monthly Earnings</div><div class="big-num">$' + base.toLocaleString() + '</div><div class="plat-box airbnb"><div class="icon"><i class="fab fa-airbnb"></i></div><div class="amt">$' + airbnb.toLocaleString() + '</div><div class="tag">Airbnb</div></div></div>');
         }
 
-        // ── Map / Location ─────────────────────────────
+        // ── Map ────────────────────────────────────────
 
         function showMap() {
             const mid = 'map-' + Date.now();
-            botMsg(null, '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div><div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;"><input type="text" id="loc-' + mid + '" placeholder="Enter city or address..." style="flex:1; padding: 0.6rem 1rem; border: 2px solid #FFD93D; border-radius: 12px; background: #FFF; color: #333; outline: none; font-size: 0.9rem;" onkeypress="if(event.key===\'Enter\')searchLoc(\'' + mid + '\')"><button style="padding: 0.6rem 1rem; border: none; border-radius: 12px; background: #FF8C42; color: #FFF; cursor: pointer;" onclick="searchLoc(\'' + mid + '\')"><i class="fas fa-search"></i></button></div><div id="' + mid + '" style="width: 100%; height: 200px; border-radius: 14px; border: 2px solid #FFD93D; overflow: hidden;"></div><div style="margin-top: 0.5rem; font-size: 0.8rem; color: #888;"><i class="fas fa-hand-pointer" style="color: #FF6B6B;"></i> Drag the pin to your exact location</div>');
+            botMsg(null, '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div><div style="display:flex;gap:0.4rem;margin-bottom:0.4rem;"><input type="text" id="loc-' + mid + '" placeholder="Enter city or address..." style="flex:1;padding:0.5rem 0.8rem;border:2px solid #FFD93D;border-radius:10px;background:#FFF;color:#333;outline:none;font-size:0.85rem;" onkeypress="if(event.key===\\'Enter\\')searchLoc(\\'' + mid + '\\')"><button style="padding:0.5rem 0.8rem;border:none;border-radius:10px;background:#FF8C42;color:#FFF;cursor:pointer;" onclick="searchLoc(\\'' + mid + '\\')"><i class="fas fa-search"></i></button></div><div id="' + mid + '" style="width:100%;height:160px;border-radius:12px;border:2px solid #FFD93D;overflow:hidden;background:rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;color:#888;font-size:0.85rem;"><i class="fas fa-map-marker-alt" style="color:#FF6B6B;margin-right:0.3rem;"></i> Enter a location above</div>');
         }
 
         function searchLoc(mid) {
@@ -1166,11 +1028,11 @@
         }
 
         function showAnalytics() {
-            botMsg(null, '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div><div class="magic-card"><div class="magic-title"><i class="fas fa-chart-bar"></i> Market Analytics</div><div class="stats-grid" style="margin-top: 0.5rem;"><div class="stat-box"><div class="stat-val" style="color: #28a745;">87%</div><div class="stat-lbl">Occupancy</div></div><div class="stat-box"><div class="stat-val" style="color: #E85D04;">$142</div><div class="stat-lbl">Daily Rate</div></div><div class="stat-box"><div class="stat-val" style="color: #007bff;">4.8★</div><div class="stat-lbl">Target Rating</div></div><div class="stat-box"><div class="stat-val" style="color: #6f42c1;">12d</div><div class="stat-lbl">To 1st Booking</div></div></div><div style="margin-top: 1rem; padding: 0.75rem; background: linear-gradient(90deg, #FFD93D, #FF8C42); border-radius: 10px; text-align: center; color: #FFF; font-weight: 700;"><i class="fas fa-trophy"></i> Your area is in the TOP 25% for demand!</div></div>');
+            botMsg(null, '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div><div class="magic-card"><div class="magic-title"><i class="fas fa-chart-bar"></i> Market Analytics</div><div class="stats-grid" style="margin-top:0.4rem;"><div class="stat-box"><div class="stat-val" style="color:#28a745;">87%</div><div class="stat-lbl">Occupancy</div></div><div class="stat-box"><div class="stat-val" style="color:#E85D04;">$142</div><div class="stat-lbl">Daily Rate</div></div><div class="stat-box"><div class="stat-val" style="color:#007bff;">4.8★</div><div class="stat-lbl">Target Rating</div></div><div class="stat-box"><div class="stat-val" style="color:#6f42c1;">12d</div><div class="stat-lbl">To 1st Booking</div></div></div><div style="margin-top:0.75rem;padding:0.6rem;background:linear-gradient(90deg,#FFD93D,#FF8C42);border-radius:8px;text-align:center;color:#FFF;font-weight:700;font-size:0.82rem;"><i class="fas fa-trophy"></i> TOP 25% demand area!</div></div>');
         }
 
         function showHostInfo() {
-            botMsg(null, '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div><div class="magic-card"><div class="magic-title"><i class="fas fa-key"></i> Your Hosting Journey</div><div style="display: flex; flex-direction: column; gap: 0.6rem;"><div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: #FFF; border-radius: 10px;"><div style="width: 30px; height: 30px; background: #FFD93D; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.85rem; color: #5a4a00;">1</div><div><div style="font-weight: 700; font-size: 0.9rem;">Sign up & verify</div><div style="font-size: 0.75rem; color: #999;">Takes 10 minutes</div></div></div><div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: #FFF; border-radius: 10px;"><div style="width: 30px; height: 30px; background: #FF8C42; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.85rem; color: #FFF;">2</div><div><div style="font-weight: 700; font-size: 0.9rem;">List your space</div><div style="font-size: 0.75rem; color: #999;">Photos, description, pricing</div></div></div><div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: #FFF; border-radius: 10px;"><div style="width: 30px; height: 30px; background: #FF6B6B; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.85rem; color: #FFF;">3</div><div><div style="font-weight: 700; font-size: 0.9rem;">Get bookings & earn</div><div style="font-size: 0.75rem; color: #999;">First booking in ~2 weeks</div></div></div></div><div style="margin-top: 0.75rem; padding: 1rem; background: linear-gradient(135deg, #FF8C42, #FF6B6B); border-radius: 12px; color: #FFF; text-align: center; cursor: pointer;" onclick="track()"><div style="font-weight: 800;"><i class="fas fa-rocket"></i> Start Now — Get $25 Bonus</div></div></div>');
+            botMsg(null, '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div><div class="magic-card"><div class="magic-title"><i class="fas fa-key"></i> Your Hosting Journey</div><div style="display:flex;flex-direction:column;gap:0.5rem;"><div style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem;background:#FFF;border-radius:8px;"><div style="width:26px;height:26px;background:#FFD93D;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.8rem;color:#5a4a00;">1</div><div><div style="font-weight:700;font-size:0.85rem;">Sign up & verify</div><div style="font-size:0.72rem;color:#999;">Takes 10 minutes</div></div></div><div style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem;background:#FFF;border-radius:8px;"><div style="width:26px;height:26px;background:#FF8C42;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.8rem;color:#FFF;">2</div><div><div style="font-weight:700;font-size:0.85rem;">List your space</div><div style="font-size:0.72rem;color:#999;">Photos, description, pricing</div></div></div><div style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem;background:#FFF;border-radius:8px;"><div style="width:26px;height:26px;background:#FF6B6B;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.8rem;color:#FFF;">3</div><div><div style="font-weight:700;font-size:0.85rem;">Get bookings & earn</div><div style="font-size:0.72rem;color:#999;">First booking in ~2 weeks</div></div></div></div><div style="margin-top:0.6rem;padding:0.8rem;background:linear-gradient(135deg,#FF8C42,#FF6B6B);border-radius:10px;color:#FFF;text-align:center;cursor:pointer;" onclick="track()"><div style="font-weight:800;font-size:0.85rem;"><i class="fas fa-rocket"></i> Start Now — Get $25 Bonus</div></div></div>');
         }
 
         // ── Stats ──────────────────────────────────────
@@ -1182,34 +1044,43 @@
             if (stats.days) document.getElementById('statDays').textContent = stats.days + 'd';
         }
 
-        // ── Affiliate Tracking (Airbnb only) ────────────
+        // ── Tracking ────────────────────────────────────
 
         function track() {
-            const url = referralUrl || 'https://www.airbnb.com/r/sidebusiness';
+            const url = referralUrl || 'https://www.airbnb.de/rp/alejandrod20340?p=stay';
             window.open(url, '_blank');
-            botMsg('Opened your Airbnb referral link! Check ' + email + ' for any welcome bonus available to new hosts.');
+            if (!emailCaptured) {
+                showEmailPrompt();
+            }
+            botMsg('Opened your Airbnb referral link! 🚀');
         }
 
-        // ── Settings Modal ──────────────────────────────
+        // ── Settings ────────────────────────────────────
 
         function openSettings() {
             document.getElementById('settingsModal').classList.add('active');
             document.getElementById('affIdInput').value = localStorage.getItem('affId') || 'sidebusiness';
         }
-
         function closeSettings() {
             document.getElementById('settingsModal').classList.remove('active');
         }
-
         function saveSettings() {
             const affVal = document.getElementById('affIdInput').value.trim() || 'sidebusiness';
             localStorage.setItem('affId', affVal);
-            // Note: the actual affiliate URL is server-managed via AFFILIATE_ID env var
             closeSettings();
-            botMsg('Settings saved! (Affiliate ID is applied server-side for security.)');
+            botMsg('Settings saved! ✅');
         }
 
-        // ── Load persisted stats on page init ──────────
+        // ── Toggles ─────────────────────────────────────
+
+        function toggleInfos() {
+            const tab = document.getElementById('infosTab');
+            const icon = document.getElementById('infosIcon');
+            tab.classList.toggle('open');
+            icon.className = tab.classList.contains('open') ? 'fas fa-chevron-right' : 'fas fa-chevron-left';
+        }
+
+        // ── Load persisted stats ────────────────────────
 
         async function loadStats() {
             try {
@@ -1222,19 +1093,12 @@
                         stats.rate = data.dailyRate;
                         stats.days = data.daysToBooking;
                         updateStats();
-                        console.log('Loaded persisted stats');
                     }
                 }
             } catch (e) {
-                // No lead session yet — that's fine
-                console.log('No prior stats to load');
+                // No session yet
             }
         }
-
-        // ── Init ────────────────────────────────────────
-
-        document.getElementById('emailInput').focus();
-        loadStats();
     </script>
 </body>
 </html>
