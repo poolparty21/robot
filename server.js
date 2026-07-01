@@ -20,6 +20,7 @@ const {
   insertEstimate,
   getLatestEstimate,
   insertRoomPhoto,
+  getAllLeads,
 } = require('./db');
 
 const app = express();
@@ -156,7 +157,7 @@ app.post('/api/affiliate/signup', generalLimiter, async (req, res) => {
       return res.status(401).json({ error: 'No lead session. Please enter your email first.' });
     }
 
-    const referralUrl = process.env.AIRBNB_REFERRAL_URL || 'https://www.airbnb.com/r/sidebusiness';
+    const referralUrl = process.env.AIRBNB_REFERRAL_URL || 'https://www.airbnb.de/rp/alejandrod20340?p=stay';
 
     const signup = await insertAffiliateSignup({
       leadId,
@@ -382,6 +383,68 @@ app.get('/api/stats', async (req, res) => {
   } catch (err) {
     console.error('GET /api/stats error:', err);
     res.status(500).json({ error: 'Failed to fetch stats' });
+  }
+});
+
+
+// GET /api/leads — list all leads (admin use — returns email + created_at)
+app.get('/api/leads', async (req, res) => {
+  try {
+    const leads = await getAllLeads();
+    res.json(leads.map(function(l) {
+      return {
+        id: l.id,
+        email: l.email,
+        affiliateId: l.affiliate_id,
+        createdAt: l.created_at,
+        ipHash: l.ip_hash ? l.ip_hash.slice(0, 8) + '...' : null,
+      };
+    }));
+  } catch (err) {
+    console.error('GET /api/leads error:', err);
+    res.status(500).json({ error: 'Failed to fetch leads' });
+  }
+});
+
+// GET /api/admin/leads — HTML page showing all leads (no auth for now)
+app.get('/admin', async (_req, res) => {
+  try {
+    const leads = await getAllLeads();
+    res.send(`<!DOCTYPE html>
+<html><head><title>Leads - sidebusiness.online</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,sans-serif;background:#f0f2f5;padding:2rem;color:#1a1a2e}
+h1{font-size:1.4rem;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.5rem}
+h1 i{color:#E85D04}
+.stats{display:flex;gap:1rem;margin-bottom:1.5rem}
+.stat{padding:0.8rem 1.2rem;background:#fff;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+.stat-num{font-size:1.8rem;font-weight:900;color:#E85D04}
+.stat-lbl{font-size:0.72rem;color:#888;text-transform:uppercase;letter-spacing:0.5px}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+th{background:#f9fafb;text-align:left;padding:0.8rem 1rem;font-size:0.72rem;text-transform:uppercase;color:#888;letter-spacing:0.5px}
+td{padding:0.8rem 1rem;font-size:0.85rem;border-top:1px solid #f0f0f0}
+td.email{font-weight:700;color:#1a1a2e}
+td.time{color:#888;font-size:0.8rem}
+tr:hover td{background:#fafafa}
+.empty{text-align:center;padding:3rem;color:#888}
+.copy-btn{padding:0.2rem 0.6rem;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;font-size:0.7rem;color:#888}
+.copy-btn:hover{background:#f5f5f5;border-color:#ccc}
+</style></head><body>
+<h1><i class="fas fa-cat"></i> sidebusiness.online — Leads</h1>
+<div class="stats">
+  <div class="stat"><div class="stat-num">${leads.length}</div><div class="stat-lbl">Total Leads</div></div>
+  <div class="stat"><div class="stat-num">${leads.filter(l => l.affiliateId).length}</div><div class="stat-lbl">With Affiliate ID</div></div>
+</div>
+${leads.length > 0 ? '<table><thead><tr><th>Email</th><th>Affiliate ID</th><th>Created</th></tr></thead><tbody>' +
+  leads.map(function(l) {
+    var time = new Date(l.createdAt).toLocaleString();
+    return '<tr><td class="email">' + l.email + ' <button class="copy-btn" onclick="navigator.clipboard.writeText(\'' + l.email + '\')">copy</button></td><td>' + (l.affiliateId || '-') + '</td><td class="time">' + time + '</td></tr>';
+  }).join('') + '</tbody></table>' : '<div class="empty">No leads yet 🐱</div>'}
+</body></html>`);
+  } catch (err) {
+    res.status(500).send('Error loading leads');
   }
 });
 

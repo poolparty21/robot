@@ -152,9 +152,20 @@ async function insertRoomPhoto({ leadId, storageUrl, aiAnalysis }) {
   return result.rows[0];
 }
 
+async function getAllLeads() {
+  const result = await getPool().query(
+    `SELECT id, email, affiliate_id, created_at, ip_hash
+     FROM leads
+     ORDER BY created_at DESC
+     LIMIT 100`
+  );
+  return result.rows;
+}
+
 module.exports = {
   initSchema,
   insertLead,
+  getAllLeads,
   insertAffiliateSignup,
   saveChatMessages,
   insertEstimate,
