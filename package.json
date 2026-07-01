@@ -1,8 +1,8 @@
 {
-  "name": "sunnyhost",
+  "name": "sidebusiness-online",
   "version": "1.0.0",
   "private": true,
-  "description": "SunnyHost — AI Space Analyzer backend",
+  "description": "sidebusiness.online — Chat Cat rental business assistant",
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js"

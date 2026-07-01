@@ -401,6 +401,6 @@ module.exports = app;
 if (require.main === module) {
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
-    console.log(`☀️ SunnyHost running on http://localhost:${PORT}`);
+    console.log(`🐱 sidebusiness.online — Chat Cat running on http://localhost:${PORT}`);
   });
 }

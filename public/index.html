@@ -2,19 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SunnyHost — AI Space Analyzer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>sidebusiness.online — Chat Cat</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --sunny: #FFD93D;
-            --orange: #FF8C42;
-            --coral: #FF6B6B;
-            --deep: #E85D04;
-            --cream: #FFF5E1;
-            --dark: #2a2a2a;
+            --cat-orange: #FF8C42;
+            --cat-coral: #FF6B6B;
+            --cat-gold: #FFD93D;
+            --cat-cream: #FFF5E1;
+            --cat-dark: #2a2a2a;
+            --cat-mint: #4ECDC4;
+            --cat-purple: #A78BFA;
+            --cat-blue: #60A5FA;
+            --bg-start: #FFD93D;
+            --bg-mid: #FF8C42;
+            --bg-end: #FF6B6B;
+            --bg-accent: #A78BFA;
+            --msg-bot-bg: rgba(255,255,255,0.92);
+            --msg-bot-color: #333;
+            --card-bg: #FFF;
+            --card-border: var(--cat-gold);
+            --input-bg: rgba(255,255,255,0.97);
+            --modal-bg: #FFF;
+            --modal-text: #333;
+            --muted-text: #888;
+            --panel-bg: rgba(255,255,255,0.97);
+            --stat-bg: #f8f8f8;
+        }
+
+        body.dark-mode {
+            --cat-orange: #FF9F4A;
+            --cat-coral: #FF7B7B;
+            --cat-gold: #FFD93D;
+            --cat-cream: #3a2a1a;
+            --cat-dark: #e8e8e8;
+            --bg-start: #1a1a2e;
+            --bg-mid: #16213e;
+            --bg-end: #0f3460;
+            --bg-accent: #533483;
+            --msg-bot-bg: rgba(30,30,45,0.94);
+            --msg-bot-color: #ddd;
+            --card-bg: #252540;
+            --card-border: #FFD93D;
+            --input-bg: rgba(30,30,45,0.95);
+            --modal-bg: #1e1e30;
+            --modal-text: #ddd;
+            --muted-text: #999;
+            --panel-bg: rgba(25,25,40,0.97);
+            --stat-bg: #2a2a45;
         }
 
         @keyframes bgShift {
@@ -23,10 +61,10 @@
             100% { background-position: 0% 50%; }
         }
 
-        @keyframes floatRotate {
+        @keyframes floatCat {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
-            25% { transform: translateY(-10px) rotate(2deg); }
-            75% { transform: translateY(-8px) rotate(-2deg); }
+            30% { transform: translateY(-8px) rotate(2deg); }
+            70% { transform: translateY(-4px) rotate(-1deg); }
         }
 
         @keyframes blink {
@@ -36,12 +74,17 @@
 
         @keyframes pulseGlow {
             0%, 100% { box-shadow: 0 0 15px rgba(255, 217, 61, 0.4); }
-            50% { box-shadow: 0 0 35px rgba(255, 217, 61, 0.8), 0 0 50px rgba(255, 140, 66, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(255, 217, 61, 0.7); }
         }
 
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(16px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(40px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
         @keyframes bounce {
@@ -49,226 +92,234 @@
             40% { transform: translateY(-8px); }
         }
 
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: linear-gradient(-45deg, #FFD93D, #FF8C42, #FF6B6B, #FFB347);
+            background: linear-gradient(-45deg, var(--bg-start), var(--bg-mid), var(--bg-end), var(--bg-accent));
             background-size: 400% 400%;
-            animation: bgShift 15s ease infinite;
+            animation: bgShift 18s ease infinite;
             min-height: 100vh;
+            min-height: 100dvh;
             color: #333;
             overflow: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100%;
         }
 
         .orb {
             position: fixed;
             border-radius: 50%;
             filter: blur(80px);
-            opacity: 0.25;
+            opacity: 0.2;
             pointer-events: none;
             z-index: 0;
         }
-        .orb:nth-child(1) { width: 350px; height: 350px; background: #FFD93D; top: 5%; left: 5%; }
-        .orb:nth-child(2) { width: 280px; height: 280px; background: #FF8C42; bottom: 10%; right: 10%; }
-        .orb:nth-child(3) { width: 220px; height: 220px; background: #FF6B6B; top: 35%; left: 60%; }
+        .orb:nth-child(1) { width: 300px; height: 300px; background: #FFD93D; top: 5%; left: 5%; }
+        .orb:nth-child(2) { width: 240px; height: 240px; background: #A78BFA; bottom: 10%; right: 10%; }
+        .orb:nth-child(3) { width: 180px; height: 180px; background: #4ECDC4; top: 40%; left: 55%; }
 
-        /* ── Layout ─────────────────────────────────── */
         .app {
             position: relative;
             z-index: 1;
             display: flex;
             flex-direction: column;
             height: 100vh;
-            max-width: 720px;
+            height: 100dvh;
+            max-width: 800px;
             margin: 0 auto;
         }
 
-        /* ── Top Hero Section (fixed height) ────────── */
+        /* ── Top Hero ───────────────────────────────── */
         .hero {
             flex-shrink: 0;
-            padding: 1.25rem 1.5rem 0.75rem;
+            padding: 0.75rem 1rem 0.5rem;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.25rem;
         }
 
-        /* Brand */
         .brand {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
             color: #FFF;
             font-weight: 700;
-            font-size: 1.15rem;
+            font-size: 1rem;
             opacity: 0.9;
-            margin-bottom: 0.25rem;
         }
-        .brand i { color: var(--sunny); font-size: 1.3rem; }
+        .brand i { color: var(--cat-gold); font-size: 0.9rem; }
 
-        /* Robot (smaller) */
-        .robot {
+        /* Chat Cat Robot */
+        .chat-cat {
             position: relative;
-            width: 80px;
-            height: 95px;
-            animation: floatRotate 4s ease-in-out infinite;
+            width: 72px;
+            height: 82px;
+            animation: floatCat 4s ease-in-out infinite;
             cursor: pointer;
-            transition: transform 0.3s;
-            margin-bottom: 0.15rem;
+            transition: transform 0.2s;
+            margin-bottom: 0.1rem;
         }
-        .robot:hover { transform: scale(1.08); }
+        .chat-cat:hover { transform: scale(1.1); }
 
-        .robot .antenna {
-            width: 4px; height: 14px;
-            background: linear-gradient(180deg, #ccc, #999);
-            margin: 0 auto;
-            border-radius: 2px;
-            position: relative;
-        }
-        .robot .antenna::after {
-            content: '';
-            position: absolute;
-            top: -8px; left: -6px;
-            width: 16px; height: 16px;
-            background: var(--sunny);
-            border-radius: 50%;
-            box-shadow: 0 0 18px var(--sunny);
-            animation: pulseGlow 2s infinite;
-        }
-        .robot .head {
-            width: 65px; height: 48px;
-            background: linear-gradient(135deg, #FFF, #f0f0f0);
-            border-radius: 18px 18px 14px 14px;
-            margin: 0 auto;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.08), inset 0 -2px 8px rgba(0,0,0,0.04);
-            position: relative;
-        }
-        .robot .eyes {
+        .chat-cat .ears {
             display: flex;
-            justify-content: center;
-            gap: 12px;
-            padding-top: 16px;
+            justify-content: space-between;
+            width: 50px;
+            margin: 0 auto;
+            position: relative;
+            top: 6px;
         }
-        .robot .eye {
-            width: 13px; height: 13px;
-            background: linear-gradient(135deg, var(--orange), var(--coral));
-            border-radius: 50%;
-            animation: blink 3.5s infinite;
+        .chat-cat .ear {
+            width: 14px; height: 16px;
+            background: linear-gradient(135deg, var(--cat-orange), var(--cat-coral));
+            border-radius: 50% 50% 0 0;
+            transform: rotate(-10deg);
         }
-        .robot .eye:nth-child(2) { animation-delay: 0.5s; }
-        .robot .eye::after {
-            content: '';
-            position: absolute;
-            top: 3px; left: 4px;
-            width: 4px; height: 4px;
-            background: #FFF;
-            border-radius: 50%;
-        }
-        .robot .mouth {
-            width: 18px; height: 6px;
-            background: linear-gradient(90deg, var(--coral), var(--orange));
-            border-radius: 0 0 10px 10px;
-            margin: 6px auto 0;
-        }
-        .robot .body {
-            width: 44px; height: 32px;
-            background: linear-gradient(135deg, #FFF, #e8e8e8);
-            border-radius: 10px;
-            margin: 3px auto 0;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.06);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .robot .screen {
-            width: 32px; height: 18px;
-            background: linear-gradient(90deg, #1a1a2e, #2a2a3e);
-            border-radius: 6px;
+        .chat-cat .ear:last-child { transform: rotate(10deg); }
+
+        .chat-cat .head {
+            width: 56px; height: 44px;
+            background: linear-gradient(135deg, #FFF, #f5f5f5);
+            border-radius: 50% 50% 40% 40%;
+            margin: 0 auto;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
             position: relative;
             overflow: hidden;
         }
-        .robot .screen::before {
+        .chat-cat .eyes {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding-top: 14px;
+        }
+        .chat-cat .eye {
+            width: 11px; height: 11px;
+            background: linear-gradient(135deg, var(--cat-orange), var(--cat-coral));
+            border-radius: 50%;
+            animation: blink 3.5s infinite;
+            position: relative;
+        }
+        .chat-cat .eye::after {
             content: '';
             position: absolute;
-            top: 5px; left: 5px;
-            width: 8px; height: 6px;
-            background: #0f0;
-            border-radius: 2px;
-            animation: blink 2s infinite;
+            top: 2px; left: 3px;
+            width: 4px; height: 4px;
+            background: #fff;
+            border-radius: 50%;
         }
-        .robot .arm-left, .robot .arm-right {
+        .chat-cat .nose {
+            width: 6px; height: 5px;
+            background: var(--cat-coral);
+            border-radius: 50%;
+            margin: 3px auto 0;
+        }
+        .chat-cat .whiskers {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: -1px;
+        }
+        .chat-cat .whisker {
+            width: 14px; height: 1.5px;
+            background: #ccc;
+            border-radius: 1px;
+        }
+        .chat-cat .body {
+            width: 38px; height: 26px;
+            background: linear-gradient(135deg, #FFF, #e8e8e8);
+            border-radius: 8px 8px 12px 12px;
+            margin: 2px auto 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        }
+        .chat-cat .body .bell {
+            width: 8px; height: 8px;
+            background: var(--cat-gold);
+            border-radius: 50%;
+            box-shadow: 0 0 6px rgba(255,217,61,0.5);
+            animation: pulseGlow 2s infinite;
+        }
+        .chat-cat .tail {
             position: absolute;
-            width: 8px; height: 20px;
-            background: linear-gradient(180deg, #ddd, #bbb);
-            border-radius: 4px;
-            top: 52px;
+            right: 0;
+            top: 40px;
+            width: 6px; height: 18px;
+            background: linear-gradient(180deg, var(--cat-orange), var(--cat-coral));
+            border-radius: 3px;
+            transform: rotate(30deg);
+            transform-origin: top;
+            animation: floatCat 3s ease-in-out infinite;
         }
-        .robot .arm-left { left: 6px; transform: rotate(-25deg); }
-        .robot .arm-right { right: 6px; transform: rotate(25deg); }
 
-        /* Headline */
         .headline {
             text-align: center;
             color: #FFF;
-            margin-bottom: 0.3rem;
         }
         .headline h2 {
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             font-weight: 800;
             letter-spacing: -0.3px;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
         .headline p {
-            font-size: 0.88rem;
+            font-size: 0.82rem;
             color: rgba(255,255,255,0.8);
-            line-height: 1.4;
+            line-height: 1.3;
         }
 
-        /* ── Input Bar ──────────────────────────────── */
+        /* ── Bigger Input Bar ───────────────────────── */
         .input-bar {
             width: 100%;
-            max-width: 620px;
+            max-width: 700px;
             position: relative;
-            margin-top: 0.2rem;
+            margin-top: 0.3rem;
         }
         .input-bar .glow {
             position: absolute;
-            inset: -3px;
-            background: linear-gradient(135deg, var(--sunny), var(--orange), var(--coral));
-            border-radius: 20px;
-            opacity: 0.45;
-            filter: blur(10px);
+            inset: -4px;
+            background: linear-gradient(135deg, var(--cat-gold), var(--cat-orange), var(--cat-coral), var(--cat-purple));
+            border-radius: 24px;
+            opacity: 0.5;
+            filter: blur(12px);
             animation: pulseGlow 3s infinite;
             z-index: -1;
         }
         .input-box {
             display: flex;
             align-items: center;
-            gap: 0.4rem;
-            background: rgba(255,255,255,0.96);
+            gap: 0.5rem;
+            background: var(--input-bg);
             backdrop-filter: blur(16px);
-            border: 2px solid rgba(255,255,255,0.8);
-            border-radius: 18px;
-            padding: 0.35rem 0.35rem 0.35rem 1rem;
-            box-shadow: 0 6px 30px rgba(0,0,0,0.10);
+            border: 2px solid rgba(255,255,255,0.9);
+            border-radius: 20px;
+            padding: 0.6rem 0.6rem 0.6rem 1.2rem;
+            box-shadow: 0 8px 36px rgba(0,0,0,0.12);
             transition: all 0.3s;
         }
         .input-box:focus-within {
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15), 0 0 0 2px var(--sunny);
-            transform: translateY(-1px);
+            box-shadow: 0 12px 48px rgba(0,0,0,0.18), 0 0 0 3px var(--cat-gold);
+            transform: translateY(-2px);
         }
         .input-box input {
             flex: 1;
             border: none;
             background: none;
-            color: var(--dark);
-            font-size: 0.95rem;
+            color: var(--cat-dark);
+            font-size: 1.05rem;
             outline: none;
-            padding: 0.5rem 0;
+            padding: 0.7rem 0;
         }
-        .input-box input::placeholder { color: #bbb; }
+        .input-box input::placeholder { color: #bbb; font-size: 0.95rem; }
         .input-action {
-            width: 38px; height: 38px;
-            border-radius: 10px;
+            width: 42px; height: 42px;
+            border-radius: 12px;
             border: none;
             background: #f5f5f5;
             color: #888;
@@ -276,38 +327,40 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1rem;
+            font-size: 1.05rem;
             transition: all 0.3s;
             flex-shrink: 0;
         }
-        .input-action:hover { background: #eee; color: var(--orange); }
+        .input-action:hover { background: #eee; color: var(--cat-orange); }
         .input-send {
-            width: 42px; height: 42px;
-            border-radius: 12px;
+            width: 48px; height: 48px;
+            border-radius: 14px;
             border: none;
-            background: linear-gradient(135deg, var(--orange), var(--coral));
+            background: linear-gradient(135deg, var(--cat-orange), var(--cat-coral));
             color: #FFF;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             transition: all 0.3s;
-            box-shadow: 0 3px 12px rgba(255,107,107,0.3);
+            box-shadow: 0 4px 16px rgba(255,107,107,0.35);
             flex-shrink: 0;
         }
-        .input-send:hover { transform: scale(1.06); box-shadow: 0 5px 18px rgba(255,107,107,0.45); }
+        .input-send:hover { transform: scale(1.08); box-shadow: 0 6px 22px rgba(255,107,107,0.5); }
+        .input-send:active { transform: scale(0.95); }
 
-        /* ── Suggestions ────────────────────────────── */
+        /* ── Suggestion Sentences Above Input ───────── */
         .suggestions {
             display: flex;
-            flex-wrap: wrap;
-            gap: 0.4rem;
-            justify-content: center;
+            flex-direction: column;
+            gap: 0.35rem;
+            width: 100%;
+            max-width: 700px;
             margin-top: 0.5rem;
             transition: opacity 0.4s, max-height 0.4s;
             overflow: hidden;
-            max-height: 100px;
+            max-height: 240px;
         }
         .suggestions.hidden {
             opacity: 0;
@@ -315,125 +368,122 @@
             margin-top: 0;
             pointer-events: none;
         }
+        .suggestion-row {
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
         .chip {
-            padding: 0.45rem 0.9rem;
-            border: 1.5px solid rgba(255,255,255,0.35);
-            border-radius: 20px;
-            background: rgba(255,255,255,0.10);
+            padding: 0.6rem 1rem;
+            border: 1.5px solid rgba(255,255,255,0.3);
+            border-radius: 50px;
+            background: rgba(255,255,255,0.12);
             color: #FFF;
             cursor: pointer;
-            font-size: 0.82rem;
+            font-size: 0.8rem;
             transition: all 0.3s;
             backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            white-space: nowrap;
         }
-        .chip:hover { background: rgba(255,255,255,0.22); border-color: rgba(255,255,255,0.6); transform: translateY(-1px); }
-        .chip i { margin-right: 0.35rem; font-size: 0.78rem; }
+        .chip:hover { background: rgba(255,255,255,0.25); border-color: rgba(255,255,255,0.6); transform: translateY(-1px); }
+        .chip i { margin-right: 0.3rem; font-size: 0.75rem; }
+        .chip.primary {
+            background: rgba(255,255,255,0.2);
+            border-color: var(--cat-gold);
+            font-weight: 600;
+        }
+        .chip.primary:hover { background: var(--cat-gold); color: var(--cat-dark); }
 
-        /* ── Email Prompt ───────────────────────────── */
-        .email-prompt {
-            margin-top: 0.5rem;
+        /* ── Geolocation Prompt ─────────────────────── */
+        .geo-prompt {
+            margin-top: 0.4rem;
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.5s ease, opacity 0.5s ease;
             opacity: 0;
             width: 100%;
-            max-width: 620px;
+            max-width: 700px;
         }
-        .email-prompt.show {
-            max-height: 120px;
+        .geo-prompt.show {
+            max-height: 100px;
             opacity: 1;
         }
-        .email-prompt-inner {
+        .geo-prompt-inner {
             background: rgba(255,255,255,0.15);
             backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255,255,255,0.25);
             border-radius: 14px;
             padding: 0.7rem 1rem;
             display: flex;
             align-items: center;
             gap: 0.6rem;
+            flex-wrap: wrap;
         }
-        .email-prompt-inner input {
-            flex: 1;
-            padding: 0.55rem 0.9rem;
-            border: 1.5px solid rgba(255,255,255,0.3);
-            border-radius: 10px;
-            background: rgba(255,255,255,0.12);
-            color: #FFF;
-            font-size: 0.85rem;
-            outline: none;
-            transition: all 0.3s;
+        .geo-prompt-inner span {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.82rem;
+            font-weight: 600;
         }
-        .email-prompt-inner input::placeholder { color: rgba(255,255,255,0.5); }
-        .email-prompt-inner input:focus { background: rgba(255,255,255,0.2); border-color: var(--sunny); }
-        .email-prompt-inner button {
-            padding: 0.55rem 1.1rem;
+        .geo-btn {
+            padding: 0.5rem 1rem;
             border: none;
             border-radius: 10px;
-            background: #FFF;
-            color: var(--orange);
+            font-size: 0.8rem;
             font-weight: 700;
-            font-size: 0.82rem;
             cursor: pointer;
             transition: all 0.3s;
             white-space: nowrap;
         }
-        .email-prompt-inner button:hover { transform: translateY(-1px); box-shadow: 0 3px 12px rgba(0,0,0,0.1); }
-        .email-prompt-inner .skip {
-            background: none;
-            color: rgba(255,255,255,0.5);
-            font-weight: 400;
-            padding: 0.55rem 0.6rem;
-        }
-        .email-prompt-inner .skip:hover { color: #FFF; background: none; box-shadow: none; }
-        .email-prompt .thank-msg {
-            display: none;
-            color: rgba(255,255,255,0.85);
-            font-size: 0.85rem;
-            padding: 0.3rem 0;
-        }
-        .email-prompt .thank-msg i { color: var(--sunny); }
+        .geo-btn.primary { background: var(--cat-gold); color: var(--cat-dark); }
+        .geo-btn.primary:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,0,0,0.15); }
+        .geo-btn.secondary { background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.7); }
+        .geo-btn.secondary:hover { color: #FFF; background: rgba(255,255,255,0.2); }
 
         /* ── Chat Messages ──────────────────────────── */
         .chat-area {
             flex: 1;
             overflow-y: auto;
-            padding: 0.5rem 1.5rem 1rem;
+            overflow-x: hidden;
+            padding: 0.4rem 1rem 0.8rem;
             display: flex;
             flex-direction: column;
-            gap: 0.6rem;
+            gap: 0.5rem;
             scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
         }
-        .chat-area:empty {
-            display: none;
-        }
+        .chat-area:empty { display: none; }
 
         .msg {
-            max-width: 88%;
+            max-width: 92%;
             padding: 0.7rem 1rem;
             border-radius: 16px;
             font-size: 0.88rem;
             line-height: 1.5;
             animation: slideUp 0.3s ease;
+            word-wrap: break-word;
         }
         .msg.bot {
             align-self: flex-start;
-            background: rgba(255,255,255,0.92);
+            background: var(--msg-bot-bg);
             backdrop-filter: blur(8px);
-            color: #333;
+            -webkit-backdrop-filter: blur(8px);
+            color: var(--msg-bot-color);
             border-bottom-left-radius: 4px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.04);
         }
         .msg.user {
             align-self: flex-end;
-            background: linear-gradient(135deg, var(--orange), var(--coral));
+            background: linear-gradient(135deg, var(--cat-orange), var(--cat-coral));
             color: #FFF;
             border-bottom-right-radius: 4px;
         }
         .msg-label {
-            font-size: 0.68rem;
+            font-size: 0.65rem;
             font-weight: 700;
-            color: var(--orange);
+            color: var(--cat-orange);
             margin-bottom: 0.2rem;
         }
         .typing {
@@ -443,7 +493,7 @@
         }
         .typing span {
             width: 7px; height: 7px;
-            background: var(--orange);
+            background: var(--cat-orange);
             border-radius: 50%;
             animation: bounce 1.4s infinite;
         }
@@ -451,85 +501,275 @@
         .typing span:nth-child(2) { animation-delay: 0.2s; }
         .typing span:nth-child(3) { animation-delay: 0.4s; }
 
-        /* ── Magic Cards (inline in chat) ───────────── */
+        /* ── Magic Cards ────────────────────────────── */
         .magic-card {
-            background: linear-gradient(135deg, #FFF 0%, var(--cream) 100%);
-            border: 2px solid var(--sunny);
+            background: linear-gradient(135deg, var(--card-bg) 0%, var(--cat-cream) 100%);
+            border: 2px solid var(--card-border);
             border-radius: 14px;
             padding: 1rem;
             margin-top: 0.3rem;
+            animation: slideUp 0.3s ease;
         }
-        .magic-title { font-weight: 800; color: var(--deep); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem; }
-        .big-num { font-size: 2.2rem; font-weight: 900; color: var(--deep); text-align: center; }
+        .magic-title { font-weight: 800; color: var(--cat-orange); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem; }
+        .big-num { font-size: 2.2rem; font-weight: 900; color: var(--cat-orange); text-align: center; }
         .plat-box { background: #FFF; border-radius: 10px; padding: 0.7rem; text-align: center; margin-top: 0.5rem; }
         .plat-box .icon { font-size: 1.2rem; margin-bottom: 0.2rem; }
-        .plat-box.airbnb .icon { color: #FF5A5F; }
         .plat-box .amt { font-size: 1.1rem; font-weight: 800; color: #333; }
         .plat-box .tag { font-size: 0.68rem; color: #999; }
 
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
         .stat-box { background: #f8f8f8; border-radius: 10px; padding: 0.7rem; text-align: center; }
-        .stat-val { font-size: 1.2rem; font-weight: 800; color: var(--deep); }
+        .stat-val { font-size: 1.2rem; font-weight: 800; color: var(--cat-orange); }
         .stat-lbl { font-size: 0.65rem; color: #999; margin-top: 0.15rem; text-transform: uppercase; }
 
-        /* ── Infos Tab ──────────────────────────────── */
-        .infos-tab {
+        /* Expandable sections inside magic cards */
+        .expand-section { margin-top: 0.5rem; }
+        .expand-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 0.7rem;
+            background: rgba(255,255,255,0.6);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.82rem;
+            transition: all 0.2s;
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+        .expand-header:hover { background: rgba(255,255,255,0.9); }
+        .expand-header .arrow { transition: transform 0.3s; font-size: 0.7rem; }
+        .expand-header.open .arrow { transform: rotate(180deg); }
+        .expand-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+            padding: 0 0.7rem;
+        }
+        .expand-body.open {
+            max-height: 800px;
+            padding: 0.7rem;
+        }
+        .expand-body ul { list-style: none; padding: 0; }
+        .expand-body ul li {
+            padding: 0.35rem 0;
+            font-size: 0.82rem;
+            color: #555;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.4rem;
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+        }
+        .expand-body ul li:last-child { border-bottom: none; }
+        .expand-body ul li i { color: var(--cat-gold); font-size: 0.7rem; margin-top: 0.3rem; flex-shrink: 0; }
+        .expand-body .price-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.3rem 0;
+            font-size: 0.82rem;
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+        }
+        .expand-body .price-row:last-child { border-bottom: none; }
+        .expand-body .price-row .label { color: #666; }
+        .expand-body .price-row .value { font-weight: 700; color: var(--cat-orange); }
+
+        /* Payment methods grid */
+        .pay-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .pay-card {
+            background: #FFF;
+            border: 2px solid #eee;
+            border-radius: 12px;
+            padding: 0.8rem 0.5rem;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: default;
+        }
+        .pay-card:hover { border-color: var(--cat-gold); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+        .pay-card .pay-icon { font-size: 1.6rem; margin-bottom: 0.3rem; }
+        .pay-card .pay-name { font-weight: 700; font-size: 0.82rem; color: #333; }
+        .pay-card .pay-region { font-size: 0.65rem; color: #999; margin-top: 0.15rem; }
+        .pay-card .pay-badge {
+            display: inline-block;
+            padding: 0.15rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            margin-top: 0.25rem;
+        }
+        .pay-badge.asia { background: #FEF3C7; color: #92400E; }
+        .pay-badge.global { background: #DBEAFE; color: #1E40AF; }
+
+        /* ── Tab Navigation (Infos & Payments) ──────── */
+        .side-tabs {
             position: fixed;
             right: 0;
             top: 50%;
-            transform: translateY(-50%) translateX(calc(100% - 42px));
+            transform: translateY(-50%) translateX(calc(100% - 44px));
             z-index: 100;
             transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .infos-tab.open { transform: translateY(-50%) translateX(0); }
-        .infos-handle {
+        .side-tabs.open { transform: translateY(-50%) translateX(0); }
+
+        body.dark-mode .side-tabs .tab-handle {
+            background: rgba(30,30,45,0.95);
+            border-color: rgba(255,255,255,0.1);
+        }
+        body.dark-mode .tab-panel {
+            background: var(--panel-bg);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        body.dark-mode .tab-nav { background: #2a2a45; border-color: rgba(255,255,255,0.06); }
+        body.dark-mode .tab-nav button { color: #999; }
+        body.dark-mode .tab-nav button.active { color: var(--cat-gold); background: rgba(255,217,61,0.08); }
+        body.dark-mode .info-link { background: #2a2a45; color: #ddd; }
+        body.dark-mode .stat-box { background: var(--stat-bg); }
+        body.dark-mode .stat-box .stat-lbl { color: #888; }
+        body.dark-mode .pay-method { background: #252540; border-color: #3a3a55; }
+        body.dark-mode .pay-method .pm-name { color: #ddd; }
+        body.dark-mode .pay-method .pm-desc { color: #999; }
+        body.dark-mode .infos-section-title { color: #666; }
+        body.dark-mode .host-cta { background: linear-gradient(135deg, var(--cat-orange), var(--cat-coral)); }
+        body.dark-mode .modal { background: var(--modal-bg); color: var(--modal-text); }
+        body.dark-mode .modal h2 { color: var(--cat-orange); }
+        body.dark-mode .field label { color: #aaa; }
+        body.dark-mode .field input { background: #2a2a45; border-color: #3a3a55; color: #ddd; }
+        body.dark-mode .field input:focus { border-color: var(--cat-orange); }
+        body.dark-mode .modal-lang select { background: #2a2a45; border-color: #3a3a55; color: #ddd; }
+        body.dark-mode .plat-box { background: #2a2a45; }
+        body.dark-mode .plat-box .amt { color: #e8e8e8; }
+        body.dark-mode .expand-body ul li { color: #bbb; border-color: rgba(255,255,255,0.04); }
+        body.dark-mode .expand-header { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.06); }
+        body.dark-mode .expand-header:hover { background: rgba(255,255,255,0.1); }
+        body.dark-mode .expand-body .price-row { border-color: rgba(255,255,255,0.04); }
+        body.dark-mode .expand-body .price-row .label { color: #999; }
+        body.dark-mode .email-modal { background: var(--modal-bg); color: var(--modal-text); }
+        body.dark-mode .email-modal h2 { color: #e8e8e8; }
+        body.dark-mode .email-modal p { color: #999; }
+        body.dark-mode .email-modal .benefits { background: #2a2a45; }
+        body.dark-mode .email-modal .benefits .benefit { color: #bbb; }
+        body.dark-mode .email-modal .email-input-wrap input { background: #2a2a45; border-color: #3a3a55; color: #ddd; }
+        body.dark-mode .email-modal .skip-link { color: #666; }
+        body.dark-mode .email-modal .skip-link:hover { color: #999; }
+        body.dark-mode .msg-label { color: var(--cat-gold); }
+
+        .tab-handle {
             position: absolute;
             left: 0; top: 50%;
             transform: translateY(-50%);
-            width: 42px; height: 100px;
+            width: 44px;
+            padding: 0.6rem 0;
             background: rgba(255,255,255,0.95);
             backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border-radius: 14px 0 0 14px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 0.3rem;
+            gap: 0.2rem;
             cursor: pointer;
             box-shadow: -3px 0 16px rgba(0,0,0,0.06);
             border: 1px solid rgba(255,255,255,0.5);
             border-right: none;
-            transition: width 0.3s;
+            transition: all 0.3s;
         }
-        .infos-handle:hover { width: 46px; }
-        .infos-handle i { color: var(--orange); font-size: 1rem; }
-        .infos-handle .handle-text { writing-mode: vertical-rl; font-size: 0.65rem; font-weight: 800; color: var(--orange); letter-spacing: 2px; text-transform: uppercase; }
-        .infos-panel {
-            margin-left: 42px;
-            width: 280px;
-            height: 65vh;
-            max-height: 480px;
+        .tab-handle:hover { width: 48px; }
+        .tab-handle i { color: var(--cat-orange); font-size: 1.1rem; }
+        .tab-handle .handle-text {
+            writing-mode: vertical-rl;
+            font-size: 0.6rem;
+            font-weight: 800;
+            color: var(--cat-orange);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .tab-panel {
+            margin-left: 44px;
+            width: 300px;
+            height: 70vh;
+            max-height: 520px;
             background: rgba(255,255,255,0.97);
             backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             border-radius: 16px 0 0 16px;
             box-shadow: -8px 0 30px rgba(0,0,0,0.08);
             overflow: hidden;
             display: flex;
             flex-direction: column;
         }
-        .infos-header {
-            padding: 1rem;
-            background: linear-gradient(135deg, var(--orange), var(--coral));
+        .tab-header {
+            padding: 0.9rem 1rem;
+            background: linear-gradient(135deg, var(--cat-orange), var(--cat-coral));
             color: #FFF;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            flex-shrink: 0;
         }
-        .infos-header h3 { font-size: 1rem; display: flex; align-items: center; gap: 0.4rem; }
-        .infos-close { width: 28px; height: 28px; border-radius: 50%; border: none; background: rgba(255,255,255,0.2); color: #FFF; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .infos-content { flex: 1; overflow-y: auto; padding: 0.9rem; }
+        .tab-header h3 { font-size: 0.95rem; display: flex; align-items: center; gap: 0.4rem; }
+        .tab-close {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255,255,255,0.2);
+            color: #FFF;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            transition: background 0.2s;
+        }
+        .tab-close:hover { background: rgba(255,255,255,0.35); }
+
+        /* Tab nav bar */
+        .tab-nav {
+            display: flex;
+            background: #f5f5f5;
+            border-bottom: 1px solid #eee;
+            flex-shrink: 0;
+        }
+        .tab-nav button {
+            flex: 1;
+            padding: 0.7rem 0.4rem;
+            border: none;
+            background: none;
+            color: #888;
+            font-weight: 700;
+            font-size: 0.78rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+        }
+        .tab-nav button.active {
+            color: var(--cat-orange);
+            border-bottom-color: var(--cat-orange);
+            background: rgba(255,140,66,0.06);
+        }
+        .tab-nav button:hover { color: var(--cat-orange); }
+
+        .tab-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.9rem;
+            -webkit-overflow-scrolling: touch;
+        }
+        .tab-content > div { display: none; }
+        .tab-content > div.active { display: block; }
+
         .infos-section { margin-bottom: 1.2rem; }
         .infos-section-title { font-size: 0.65rem; font-weight: 800; color: #bbb; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 0.6rem; }
+
         .info-link {
             display: flex;
             align-items: center;
@@ -543,48 +783,270 @@
             transition: all 0.3s;
             border: 1px solid transparent;
         }
-        .info-link:hover { transform: translateX(3px); border-color: var(--sunny); }
+        .info-link:hover { transform: translateX(3px); border-color: var(--cat-gold); }
         .info-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
         .info-icon.airbnb { background: #FFE8E8; color: #FF5A5F; }
         .info-text { flex: 1; }
         .info-text div:first-child { font-weight: 700; font-size: 0.85rem; }
         .info-text div:last-child { font-size: 0.72rem; color: #999; margin-top: 0.1rem; }
-        .host-cta { background: linear-gradient(135deg, var(--orange), var(--coral)); border-radius: 12px; padding: 1rem; color: #FFF; text-align: center; cursor: pointer; transition: all 0.3s; margin-top: 0.4rem; }
+
+        .host-cta {
+            background: linear-gradient(135deg, var(--cat-orange), var(--cat-coral));
+            border-radius: 12px;
+            padding: 1rem;
+            color: #FFF;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 0.4rem;
+        }
         .host-cta:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(232,93,4,0.25); }
         .host-cta i { font-size: 1.4rem; margin-bottom: 0.3rem; }
         .host-cta div:first-of-type { font-weight: 800; font-size: 0.9rem; }
         .host-cta div:last-child { font-size: 0.75rem; opacity: 0.9; margin-top: 0.15rem; }
 
+        /* Payment tab list */
+        .pay-method {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            padding: 0.8rem;
+            background: #fff;
+            border: 2px solid #f0f0f0;
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s;
+        }
+        .pay-method:hover { border-color: var(--cat-gold); transform: translateX(3px); }
+        .pay-method .pm-icon {
+            width: 44px; height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+        .pay-method .pm-info { flex: 1; }
+        .pay-method .pm-name { font-weight: 700; font-size: 0.85rem; color: #333; }
+        .pay-method .pm-desc { font-size: 0.72rem; color: #999; margin-top: 0.1rem; }
+        .pay-method .pm-badge {
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
         /* ── Settings Modal ─────────────────────────── */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.35); display: none; align-items: center; justify-content: center; z-index: 500; backdrop-filter: blur(6px); }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.35); display: none; align-items: center; justify-content: center; z-index: 500; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); padding: 1rem; }
         .modal-overlay.active { display: flex; }
-        .modal { background: #FFF; border-radius: 24px; padding: 2rem; max-width: 380px; width: 90%; box-shadow: 0 24px 50px rgba(0,0,0,0.18); animation: slideUp 0.35s ease; }
-        .modal h2 { color: var(--deep); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.4rem; font-size: 1.1rem; }
+        .modal { background: #FFF; border-radius: 24px; padding: 2rem; max-width: 380px; width: 100%; box-shadow: 0 24px 50px rgba(0,0,0,0.18); animation: slideUp 0.35s ease; }
+        .modal h2 { color: var(--cat-orange); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.4rem; font-size: 1.1rem; }
         .field { margin-bottom: 1rem; }
         .field label { display: block; font-size: 0.82rem; font-weight: 700; color: #888; margin-bottom: 0.4rem; }
         .field input { width: 100%; padding: 0.75rem 1rem; border: 2px solid #eee; border-radius: 12px; font-size: 0.9rem; outline: none; transition: all 0.3s; }
-        .field input:focus { border-color: var(--orange); }
+        .field input:focus { border-color: var(--cat-orange); }
         .field .info-note { font-size: 0.75rem; color: #999; margin-top: 0.2rem; }
+        .modal-lang { margin-bottom: 1rem; }
+        .modal-lang select { width: 100%; padding: 0.75rem 1rem; border: 2px solid #eee; border-radius: 12px; font-size: 0.9rem; outline: none; transition: all 0.3s; background: #fff; }
+        .modal-lang select:focus { border-color: var(--cat-orange); }
         .modal-actions { display: flex; gap: 0.6rem; justify-content: flex-end; margin-top: 1.5rem; }
         .btn-text { padding: 0.6rem 1.1rem; border: none; background: none; color: #888; cursor: pointer; font-size: 0.9rem; border-radius: 10px; transition: background 0.3s; }
         .btn-text:hover { background: #f5f5f5; }
-        .btn-primary { padding: 0.6rem 1.3rem; border: none; border-radius: 10px; background: linear-gradient(135deg, var(--orange), var(--coral)); color: #FFF; cursor: pointer; font-weight: 700; font-size: 0.9rem; transition: all 0.3s; }
+        .btn-primary { padding: 0.6rem 1.3rem; border: none; border-radius: 10px; background: linear-gradient(135deg, var(--cat-orange), var(--cat-coral)); color: #FFF; cursor: pointer; font-weight: 700; font-size: 0.9rem; transition: all 0.3s; }
         .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,107,107,0.35); }
 
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.08); border-radius: 8px; }
 
+        /* ── Responsive ─────────────────────────────── */
         @media (max-width: 640px) {
-            .hero { padding: 1rem 1rem 0.5rem; }
-            .headline h2 { font-size: 1.05rem; }
-            .headline p { font-size: 0.8rem; }
-            .chat-area { padding: 0.5rem 1rem 1rem; }
-            .infos-panel { width: 250px; }
-            .chip { font-size: 0.75rem; padding: 0.4rem 0.75rem; }
+            .hero { padding: 0.5rem 0.75rem 0.3rem; }
+            .headline h2 { font-size: 1rem; }
+            .headline p { font-size: 0.75rem; }
+            .chat-area { padding: 0.3rem 0.75rem 0.6rem; }
+            .tab-panel { width: 280px; height: 65vh; }
+            .chip { font-size: 0.72rem; padding: 0.45rem 0.75rem; }
+            .input-box { padding: 0.4rem 0.4rem 0.4rem 0.9rem; border-radius: 16px; }
+            .input-box input { font-size: 0.95rem; padding: 0.5rem 0; }
+            .input-send { width: 42px; height: 42px; font-size: 1.05rem; }
+            .input-action { width: 36px; height: 36px; font-size: 0.9rem; }
+            .chat-cat { width: 60px; height: 70px; }
+            .pay-grid { grid-template-columns: 1fr 1fr; }
+            .suggestions { max-height: 200px; }
+            .suggestion-row { gap: 0.3rem; }
+            .msg { max-width: 95%; font-size: 0.85rem; padding: 0.6rem 0.85rem; }
+        }
+
+        @media (max-width: 400px) {
+            .hero { padding: 0.3rem 0.5rem 0.2rem; }
+            .headline h2 { font-size: 0.9rem; }
+            .chat-cat { width: 50px; height: 60px; }
+            .tab-panel { width: 260px; }
+            .pay-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Landscape mode on phones */
+        @media (max-height: 500px) {
+            .hero { padding: 0.3rem 0.5rem; gap: 0.1rem; }
+            .chat-cat { width: 40px; height: 48px; }
+            .chat-cat .head { width: 40px; height: 32px; }
+            .chat-cat .eyes { padding-top: 10px; gap: 8px; }
+            .chat-cat .eye { width: 8px; height: 8px; }
+            .headline h2 { font-size: 0.85rem; }
+            .headline p { font-size: 0.7rem; display: none; }
+            .input-box { padding: 0.25rem 0.25rem 0.25rem 0.7rem; }
+            .input-box input { font-size: 0.85rem; padding: 0.3rem 0; }
+            .input-send { width: 34px; height: 34px; font-size: 0.9rem; }
+            .suggestions { max-height: 80px; }
+            .suggestion-row .chip { font-size: 0.65rem; padding: 0.25rem 0.5rem; }
+            .chat-area { padding: 0.2rem 0.5rem 0.3rem; gap: 0.3rem; }
         }
 
         .hidden { display: none !important; }
+
+        /* Safe area for notched phones */
+        /* ── Email Capture Modal ─────────────────────── */
+        @keyframes emailSlideUp {
+            from { opacity: 0; transform: translateY(30px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes emailOverlayIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .email-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.4);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 600;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 1rem;
+            animation: emailOverlayIn 0.3s ease;
+        }
+        .email-overlay.active { display: flex; }
+        .email-modal {
+            background: #FFF;
+            border-radius: 24px;
+            padding: 2rem 1.8rem;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+            animation: emailSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            text-align: center;
+        }
+        .email-modal .cat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            animation: floatCat 4s ease-in-out infinite;
+        }
+        .email-modal h2 {
+            color: var(--cat-dark);
+            font-size: 1.2rem;
+            font-weight: 800;
+            margin-bottom: 0.3rem;
+        }
+        .email-modal p {
+            color: #888;
+            font-size: 0.88rem;
+            line-height: 1.5;
+            margin-bottom: 1.25rem;
+        }
+        .email-modal .email-input-wrap {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.6rem;
+        }
+        .email-modal .email-input-wrap input {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            border: 2px solid #eee;
+            border-radius: 14px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .email-modal .email-input-wrap input:focus {
+            border-color: var(--cat-orange);
+        }
+        .email-modal .email-input-wrap button {
+            padding: 0.8rem 1.2rem;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--cat-orange), var(--cat-coral));
+            color: #FFF;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        .email-modal .email-input-wrap button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(255,107,107,0.35);
+        }
+        .email-modal .email-input-wrap button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .email-modal .skip-link {
+            display: inline-block;
+            margin-top: 0.4rem;
+            color: #bbb;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: color 0.2s;
+            background: none;
+            border: none;
+            text-decoration: underline;
+        }
+        .email-modal .skip-link:hover { color: #888; }
+        .email-modal .benefits {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            margin: 1rem 0 0;
+            padding: 0.8rem;
+            background: #f8f8f8;
+            border-radius: 12px;
+        }
+        .email-modal .benefits .benefit {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: #555;
+        }
+        .email-modal .benefits .benefit i {
+            width: 20px;
+            color: var(--cat-gold);
+        }
+        .email-modal .status-msg {
+            margin-top: 0.6rem;
+            font-size: 0.82rem;
+            font-weight: 600;
+            min-height: 1.4rem;
+        }
+        .email-modal .status-msg.success { color: #16a34a; }
+        .email-modal .status-msg.error { color: #dc2626; }
+
+        @media (max-width: 480px) {
+            .email-modal { padding: 1.5rem 1.2rem; }
+            .email-modal .email-input-wrap { flex-direction: column; }
+            .email-modal .email-input-wrap button { width: 100%; }
+        }
+
+        @supports (padding: max(0px)) {
+            .hero { padding-left: max(1rem, env(safe-area-inset-left)); padding-right: max(1rem, env(safe-area-inset-right)); }
+            .chat-area { padding-left: max(1rem, env(safe-area-inset-left)); padding-right: max(1rem, env(safe-area-inset-right)); padding-bottom: max(0.8rem, env(safe-area-inset-bottom)); }
+        }
     </style>
 </head>
 <body>
@@ -592,14 +1054,44 @@
     <div class="orb"></div>
     <div class="orb"></div>
 
+    <!-- Email Capture Modal -->
+    <div class="email-overlay" id="emailModal" onclick="if(event.target===this) skipEmail()" style="display:none;">
+        <div class="email-modal">
+            <div class="cat-icon">🐱</div>
+            <h2>Save Your Progress</h2>
+            <p>Enter your email to save your rental plan, income estimates, and get personalized tips straight to your inbox.</p>
+            <div class="email-input-wrap">
+                <input type="email" id="emailInput" placeholder="your@email.com" autocomplete="email" onkeypress="if(event.key==='Enter') submitEmail()">
+                <button id="emailSubmitBtn" onclick="submitEmail()"><i class="fas fa-paper-plane"></i> Save</button>
+            </div>
+            <button class="skip-link" onclick="skipEmail()">No thanks, I'll explore on my own</button>
+            <div class="status-msg" id="emailStatus"></div>
+            <div class="benefits">
+                <div class="benefit"><i class="fas fa-cloud-check"></i> Your income estimates, saved forever</div>
+                <div class="benefit"><i class="fas fa-bell"></i> Weekly market tips for your area</div>
+                <div class="benefit"><i class="fas fa-gift"></i> Exclusive host bonuses & referral rewards</div>
+            </div>
+        </div>
+    </div>
+
     <!-- Settings Modal -->
     <div class="modal-overlay" id="settingsModal" onclick="if(event.target===this) closeSettings()">
         <div class="modal">
             <h2><i class="fas fa-cog"></i> Settings</h2>
+            <div class="modal-lang">
+                <label style="display:block;font-size:0.82rem;font-weight:700;color:#888;margin-bottom:0.4rem;"><i class="fas fa-globe"></i> Your Region</label>
+                <select id="regionSelect" onchange="onRegionChange()">
+                    <option value="asia">🌏 Asia Pacific</option>
+                    <option value="europe">🌍 Europe</option>
+                    <option value="na">🌎 North America</option>
+                    <option value="sa">🌎 South America</option>
+                    <option value="africa">🌍 Africa</option>
+                    <option value="oceania">🌏 Oceania</option>
+                </select>
+            </div>
             <div class="field">
                 <label><i class="fas fa-tag"></i> Affiliate ID</label>
                 <input type="text" id="affIdInput" placeholder="sidebusiness">
-                <div class="info-note">Affiliate URL is managed server-side.</div>
             </div>
             <div class="modal-actions">
                 <button class="btn-text" onclick="closeSettings()">Cancel</button>
@@ -608,42 +1100,68 @@
         </div>
     </div>
 
-    <!-- Infos Tab -->
-    <div class="infos-tab" id="infosTab">
-        <div class="infos-handle" onclick="toggleInfos()">
-            <i class="fas fa-chevron-left" id="infosIcon"></i>
-            <span class="handle-text">Infos</span>
-            <i class="fas fa-info-circle"></i>
+    <!-- Side Tabs (Infos & Payments) -->
+    <div class="side-tabs" id="sideTabs">
+        <div class="tab-handle" onclick="toggleSideTabs()">
+            <i class="fas fa-chevron-left" id="tabIcon"></i>
+            <span class="handle-text">Menu</span>
+            <i class="fas fa-bars"></i>
         </div>
-        <div class="infos-panel">
-            <div class="infos-header">
-                <h3><i class="fas fa-sun"></i> Infos</h3>
-                <button class="infos-close" onclick="toggleInfos()"><i class="fas fa-times"></i></button>
+        <div class="tab-panel">
+            <div class="tab-header">
+                <h3><i class="fas fa-cat"></i> Chat Cat</h3>
+                <button class="tab-close" onclick="toggleSideTabs()"><i class="fas fa-times"></i></button>
             </div>
-            <div class="infos-content">
-                <div class="infos-section">
-                    <div class="infos-section-title">Your Affiliate Link</div>
-                    <a href="#" class="info-link" onclick="track()">
-                        <div class="info-icon airbnb"><i class="fab fa-airbnb"></i></div>
-                        <div class="info-text"><div>Airbnb</div><div>Sign up & start hosting</div></div>
-                        <i class="fas fa-external-link-alt" style="color: #ddd; font-size: 0.75rem;"></i>
-                    </a>
-                </div>
-                <div class="infos-section">
-                    <div class="infos-section-title">Live Stats</div>
-                    <div class="stats-grid">
-                        <div class="stat-box"><div class="stat-val" id="statIncome">$0</div><div class="stat-lbl">Monthly</div></div>
-                        <div class="stat-box"><div class="stat-val" id="statOcc">0%</div><div class="stat-lbl">Occupancy</div></div>
-                        <div class="stat-box"><div class="stat-val" id="statRate">$0</div><div class="stat-lbl">Daily Rate</div></div>
-                        <div class="stat-box"><div class="stat-val" id="statDays">0</div><div class="stat-lbl">To Booking</div></div>
+            <div class="tab-nav">
+                <button class="active" onclick="switchTab('infos', this)" id="tabInfosBtn"><i class="fas fa-info-circle"></i> Infos</button>
+                <button onclick="switchTab('payments', this)" id="tabPaymentsBtn"><i class="fas fa-credit-card"></i> Payments</button>
+            </div>
+            <div class="tab-content">
+                <!-- Infos Tab -->
+                <div class="active" id="tabInfos">
+                    <div class="infos-section">
+                        <div class="infos-section-title">Your Affiliate Link</div>
+                        <a href="#" class="info-link" onclick="track()">
+                            <div class="info-icon airbnb"><i class="fab fa-airbnb"></i></div>
+                            <div class="info-text"><div>Airbnb</div><div>Sign up & start hosting</div></div>
+                            <i class="fas fa-external-link-alt" style="color: #ddd; font-size: 0.75rem;"></i>
+                        </a>
+                    </div>
+                    <div class="infos-section">
+                        <div class="infos-section-title">Live Stats</div>
+                        <div class="stats-grid">
+                            <div class="stat-box"><div class="stat-val" id="statIncome">$0</div><div class="stat-lbl">Monthly</div></div>
+                            <div class="stat-box"><div class="stat-val" id="statOcc">0%</div><div class="stat-lbl">Occupancy</div></div>
+                            <div class="stat-box"><div class="stat-val" id="statRate">$0</div><div class="stat-lbl">Daily Rate</div></div>
+                            <div class="stat-box"><div class="stat-val" id="statDays">0</div><div class="stat-lbl">To Booking</div></div>
+                        </div>
+                    </div>
+                    <div class="infos-section">
+                        <div class="infos-section-title">Become a Host</div>
+                        <div class="host-cta" onclick="sendQuick('How do I become a host?')">
+                            <i class="fas fa-key"></i>
+                            <div>Start Hosting Today</div>
+                            <div>Earn up to $2,000/month</div>
+                        </div>
                     </div>
                 </div>
-                <div class="infos-section">
-                    <div class="infos-section-title">Become a Host</div>
-                    <div class="host-cta" onclick="sendQuick('How do I become a host?')">
-                        <i class="fas fa-key"></i>
-                        <div>Start Hosting Today</div>
-                        <div>Earn up to $2,000/month</div>
+                <!-- Payments Tab (region-specific) -->
+                <div id="tabPayments">
+                    <div class="infos-section">
+                        <div class="infos-section-title"><i class="fas fa-globe-asia"></i> Asia-Pacific Payment Methods</div>
+                        <div id="paymentMethodsList">
+                            <!-- Populated by JS based on region -->
+                        </div>
+                    </div>
+                    <div class="infos-section">
+                        <div class="infos-section-title">Payment Info</div>
+                        <div style="font-size:0.8rem;color:#666;line-height:1.6;padding:0.5rem;background:#f8f8f8;border-radius:10px;">
+                            <i class="fas fa-shield-alt" style="color:var(--cat-mint);margin-right:0.3rem;"></i>
+                            Your region is set to <strong id="regionDisplay">Asia Pacific</strong>. Change in Settings.
+                            <div style="margin-top:0.4rem;font-size:0.75rem;color:#999;">
+                                Payouts are processed within 1-3 business days depending on the method.
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -654,70 +1172,223 @@
     <div class="app">
         <!-- Top Hero -->
         <div class="hero">
-            <div class="brand"><i class="fas fa-sun"></i><span>SunnyHost</span></div>
-            <div class="robot" onclick="sendQuick('Hey Sunny!')">
-                <div class="antenna"></div>
+            <div class="brand"><i class="fas fa-cat"></i><span>sidebusiness.online</span></div>
+
+            <div class="chat-cat" onclick="sendQuick('Hey Chat Cat! Tell me about renting')">
+                <div class="ears"><div class="ear"></div><div class="ear"></div></div>
                 <div class="head">
                     <div class="eyes"><div class="eye"></div><div class="eye"></div></div>
-                    <div class="mouth"></div>
+                    <div class="nose"></div>
+                    <div class="whiskers"><div class="whisker"></div><div class="whisker"></div></div>
                 </div>
-                <div class="body"><div class="screen"></div></div>
-                <div class="arm-left"></div>
-                <div class="arm-right"></div>
-            </div>
-            <div class="headline" id="headline">
-                <h2>Hey, I'm Sunny! 👋</h2>
-                <p>Tell me about your space — I'll estimate your Airbnb income</p>
+                <div class="body"><div class="bell"></div></div>
+                <div class="tail"></div>
             </div>
 
-            <!-- Input Bar -->
+            <div class="headline" id="headline">
+                <h2>Hey, I'm Chat Cat! 🐱</h2>
+                <p>Ask me anything about renting rooms, earning money, and building your side business</p>
+            </div>
+
+            <!-- Suggestion Sentences Above Input -->
+            <div class="suggestions" id="suggestions">
+                <div class="suggestion-row">
+                    <button class="chip primary" onclick="fillInput('How much can I earn when I list my room for rent?')"><i class="fas fa-coins"></i> How much can I earn?</button>
+                    <button class="chip primary" onclick="fillInput('What is required to rent my room?')"><i class="fas fa-clipboard-list"></i> What's required?</button>
+                </div>
+                <div class="suggestion-row">
+                    <button class="chip" onclick="fillInput('How can I get paid?')"><i class="fas fa-money-bill-wave"></i> How do I get paid?</button>
+                    <button class="chip" onclick="fillInput('Give me the full plan to start renting my whole house to a traveler')"><i class="fas fa-home"></i> Full rental plan</button>
+                    <button class="chip" onclick="fillInput('Show me my income potential')"><i class="fas fa-calculator"></i> Income estimate</button>
+                </div>
+            </div>
+
+            <!-- Geolocation Prompt -->
+            <div class="geo-prompt" id="geoPrompt">
+                <div class="geo-prompt-inner">
+                    <span><i class="fas fa-map-marker-alt"></i> Share your location for local market data</span>
+                    <button class="geo-btn primary" onclick="requestLocation()"><i class="fas fa-location-dot"></i> Share Location</button>
+                    <button class="geo-btn secondary" onclick="dismissGeo()">Skip</button>
+                </div>
+            </div>
+
+            <!-- Input Bar (bigger) -->
             <div class="input-bar">
                 <div class="glow"></div>
                 <div class="input-box">
-                    <input type="text" id="chatInput" placeholder="I have a spare room, can I earn money?" onkeypress="if(event.key==='Enter') send()">
+                    <input type="text" id="chatInput" placeholder="Ask Chat Cat anything about renting..." onkeypress="if(event.key==='Enter') send()">
                     <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleFile(event)">
                     <button class="input-action" onclick="document.getElementById('fileInput').click()" title="Upload photo"><i class="fas fa-image"></i></button>
+                    <button class="input-action" id="darkModeBtn" onclick="toggleDarkMode()" title="Toggle dark mode"><i class="fas fa-moon"></i></button>
                     <button class="input-action" onclick="openSettings()" title="Settings"><i class="fas fa-cog"></i></button>
                     <button class="input-send" onclick="send()" title="Send"><i class="fas fa-paper-plane"></i></button>
                 </div>
             </div>
-
-            <!-- Suggestions -->
-            <div class="suggestions" id="suggestions">
-                <button class="chip" onclick="fillInput('I have a spare room, can I earn money?')"><i class="fas fa-bed"></i> Spare room</button>
-                <button class="chip" onclick="fillInput('Show me my income potential')"><i class="fas fa-calculator"></i> Income</button>
-                <button class="chip" onclick="fillInput('How do I become a host?')"><i class="fas fa-home"></i> Become host</button>
-                <button class="chip" onclick="fillInput('Upload my room photo')"><i class="fas fa-camera"></i> Photo</button>
-                <button class="chip" onclick="fillInput('Pin my location on the map')"><i class="fas fa-map-pin"></i> Location</button>
-            </div>
-
-            <!-- Email Prompt (appears after a few messages) -->
-            <div class="email-prompt" id="emailPrompt">
-                <div class="email-prompt-inner" id="emailPromptForm">
-                    <input type="email" id="emailInput" placeholder="your@email.com — save your results">
-                    <button onclick="captureEmail()">Save</button>
-                    <button class="skip" onclick="dismissEmailPrompt()">Skip</button>
-                </div>
-                <div class="thank-msg" id="emailThank">✅ <span id="emailDisplay"></span> — we'll save your stats!</div>
-            </div>
         </div>
 
-        <!-- Chat Messages Area (scrollable) -->
+        <!-- Chat Messages Area -->
         <div class="chat-area" id="chatMessages"></div>
     </div>
 
     <script>
         let email = '';
+        let region = localStorage.getItem('sbRegion') || 'asia';
         let referralUrl = localStorage.getItem('affUrl') || '';
         let history = [];
         let stats = { income: 0, occ: 0, rate: 0, days: 0 };
         let msgCount = 0;
-        let emailCaptured = false;
+        let geoAsked = false;
+        let geoGranted = false;
+        let leadCaptured = localStorage.getItem('sbLeadEmail') ? true : false;
+        let leadSkipped = localStorage.getItem('sbLeadSkip') ? true : false;
+        let emailSubmitting = false;
+
+        // Payment methods data by region
+        const PAYMENT_METHODS = {
+            asia: [
+                { name: 'GCash', icon: 'fas fa-mobile-alt', color: '#007AFF', bg: '#E8F4FD', desc: 'Philippines mobile wallet', badge: 'Popular in PH' },
+                { name: 'PayPal', icon: 'fab fa-paypal', color: '#003087', bg: '#E8F0FE', desc: 'Global payments', badge: 'Worldwide' },
+                { name: 'Telegram Pay', icon: 'fab fa-telegram', color: '#0088cc', bg: '#E8F4FD', desc: 'Chat-based payments', badge: 'Fast' },
+                { name: 'Coins.ph', icon: 'fas fa-coins', color: '#F7931A', bg: '#FFF3E0', desc: 'PH crypto & payments', badge: 'Crypto OK' },
+                { name: 'Moneybees.ph', icon: 'fas fa-bee', color: '#FFB300', bg: '#FFF8E1', desc: 'PH digital wallet', badge: 'No fee' },
+                { name: 'PayMaya', icon: 'fas fa-credit-card', color: '#00A1B0', bg: '#E0F7FA', desc: 'PH card payments', badge: 'Popular' },
+            ],
+            europe: [
+                { name: 'PayPal', icon: 'fab fa-paypal', color: '#003087', bg: '#E8F0FE', desc: 'Global payments', badge: 'Worldwide' },
+                { name: 'Stripe', icon: 'fab fa-stripe', color: '#635BFF', bg: '#EDEBFF', desc: 'Card payments', badge: 'EU Standard' },
+                { name: 'Revolut', icon: 'fas fa-repeat', color: '#191C1F', bg: '#F0F0F0', desc: 'Digital banking', badge: 'Fast' },
+                { name: 'Wise', icon: 'fas fa-exchange-alt', color: '#00B9FF', bg: '#E3F7FF', desc: 'International transfers', badge: 'Low fee' },
+            ],
+            na: [
+                { name: 'PayPal', icon: 'fab fa-paypal', color: '#003087', bg: '#E8F0FE', desc: 'Global payments', badge: 'Worldwide' },
+                { name: 'Stripe', icon: 'fab fa-stripe', color: '#635BFF', bg: '#EDEBFF', desc: 'Card payments', badge: 'US Standard' },
+                { name: 'Venmo', icon: 'fab fa-cc-visa', color: '#008CFF', bg: '#E3F2FD', desc: 'Peer-to-peer payments', badge: 'Popular US' },
+                { name: 'Cash App', icon: 'fas fa-money-bill', color: '#00D632', bg: '#E8F5E9', desc: 'Mobile payments', badge: 'US Only' },
+            ],
+            sa: [
+                { name: 'PayPal', icon: 'fab fa-paypal', color: '#003087', bg: '#E8F0FE', desc: 'Global payments', badge: 'Worldwide' },
+                { name: 'Mercado Pago', icon: 'fas fa-hand-holding-usd', color: '#009EE3', bg: '#E3F2FD', desc: 'Latin America payments', badge: 'Most used' },
+                { name: 'PicPay', icon: 'fas fa-arrow-right', color: '#11C76F', bg: '#E8F5E9', desc: 'Brazil payments', badge: 'Brazil' },
+            ],
+            africa: [
+                { name: 'PayPal', icon: 'fab fa-paypal', color: '#003087', bg: '#E8F0FE', desc: 'Global payments', badge: 'Worldwide' },
+                { name: 'M-Pesa', icon: 'fas fa-mobile-alt', color: '#4CAF50', bg: '#E8F5E9', desc: 'Mobile money Africa', badge: 'Most used' },
+                { name: 'Flutterwave', icon: 'fas fa-wave-square', color: '#FCAF45', bg: '#FFF3E0', desc: 'African payments', badge: 'Popular' },
+            ],
+            oceania: [
+                { name: 'PayPal', icon: 'fab fa-paypal', color: '#003087', bg: '#E8F0FE', desc: 'Global payments', badge: 'Worldwide' },
+                { name: 'Stripe', icon: 'fab fa-stripe', color: '#635BFF', bg: '#EDEBFF', desc: 'Card payments', badge: 'Standard' },
+                { name: 'Afterpay', icon: 'fas fa-clock', color: '#B2D235', bg: '#F9FBE7', desc: 'Buy now pay later', badge: 'AU/NZ' },
+            ]
+        };
+
+        const REGION_NAMES = {
+            asia: 'Asia Pacific', europe: 'Europe', na: 'North America',
+            sa: 'South America', africa: 'Africa', oceania: 'Oceania'
+        };
+
+        // ── Dark Mode ────────────────────────────────
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const btn = document.getElementById('darkModeBtn');
+            const isDark = document.body.classList.contains('dark-mode');
+            if (btn) btn.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+            localStorage.setItem('sbDarkMode', isDark ? 'true' : 'false');
+        }
+
+        function initDarkMode() {
+            const saved = localStorage.getItem('sbDarkMode');
+            if (saved === 'true') {
+                document.body.classList.add('dark-mode');
+                const btn = document.getElementById('darkModeBtn');
+                if (btn) btn.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+        }
 
         // ── Init ────────────────────────────────────────
 
+        initDarkMode();
         document.getElementById('chatInput').focus();
         loadStats();
+        renderPaymentMethods(region);
+        showGeoPrompt();
+
+        // ── Geolocation ────────────────────────────────
+
+        function showGeoPrompt() {
+            if (geoAsked || geoGranted) return;
+            setTimeout(function() {
+                document.getElementById('geoPrompt').classList.add('show');
+            }, 2000);
+        }
+
+        function dismissGeo() {
+            geoAsked = true;
+            document.getElementById('geoPrompt').classList.remove('show');
+        }
+
+        function requestLocation() {
+            if (!navigator.geolocation) {
+                botMsg("📍 Location not supported on this device. You can type your city manually!");
+                dismissGeo();
+                return;
+            }
+            navigator.geolocation.getCurrentPosition(
+                function(pos) {
+                    geoGranted = true;
+                    geoAsked = true;
+                    dismissGeo();
+                    botMsg("📍 Got your location! Let me check the local market data for you...");
+                    setTimeout(function() {
+                        botMsg('Your area has <b>strong rental demand</b>! Average monthly income potential: <b>$1,200-2,500</b>. Want the full breakdown?');
+                    }, 800);
+                },
+                function() {
+                    geoAsked = true;
+                    dismissGeo();
+                    botMsg("No problem! You can type your city or neighborhood and I'll look up local market data.");
+                },
+                { timeout: 10000 }
+            );
+        }
+
+        // ── Payment Methods ────────────────────────────
+
+        function renderPaymentMethods(regionCode) {
+            const list = document.getElementById('paymentMethodsList');
+            const methods = PAYMENT_METHODS[regionCode] || PAYMENT_METHODS.asia;
+            document.getElementById('regionDisplay').textContent = REGION_NAMES[regionCode] || 'Asia Pacific';
+
+            list.innerHTML = methods.map(function(m) {
+                return '<div class="pay-method">' +
+                    '<div class="pm-icon" style="background:' + m.bg + ';color:' + m.color + '"><i class="' + m.icon + '"></i></div>' +
+                    '<div class="pm-info"><div class="pm-name">' + m.name + '</div><div class="pm-desc">' + m.desc + '</div></div>' +
+                    '<span class="pm-badge" style="background:' + m.bg + ';color:' + m.color + '">' + m.badge + '</span>' +
+                    '</div>';
+            }).join('');
+        }
+
+        function onRegionChange() {
+            const r = document.getElementById('regionSelect').value;
+            renderPaymentMethods(r);
+        }
+
+        // ── Tab Switching ──────────────────────────────
+
+        function switchTab(tab, btn) {
+            document.querySelectorAll('.tab-nav button').forEach(function(b) { b.classList.remove('active'); });
+            document.querySelectorAll('.tab-content > div').forEach(function(d) { d.classList.remove('active'); });
+            btn.classList.add('active');
+            document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+        }
+
+        function toggleSideTabs() {
+            const tab = document.getElementById('sideTabs');
+            const icon = document.getElementById('tabIcon');
+            tab.classList.toggle('open');
+            icon.className = tab.classList.contains('open') ? 'fas fa-chevron-right' : 'fas fa-chevron-left';
+        }
 
         // ── Chat Messages ──────────────────────────────
 
@@ -731,8 +1402,18 @@
                 let formatted = text
                     .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
                     .replace(/\n/g, '<br>');
-                div.innerHTML = '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div>' + formatted;
+                div.innerHTML = '<div class="msg-label"><i class="fas fa-cat"></i> Chat Cat</div>' + formatted;
             }
+            area.appendChild(div);
+            area.scrollTop = area.scrollHeight;
+            return div;
+        }
+
+        function botMsgCard(htmlContent) {
+            const area = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = 'msg bot';
+            div.innerHTML = '<div class="msg-label"><i class="fas fa-cat"></i> Chat Cat</div>' + htmlContent;
             area.appendChild(div);
             area.scrollTop = area.scrollHeight;
             return div;
@@ -746,11 +1427,14 @@
             area.appendChild(div);
             area.scrollTop = area.scrollHeight;
             msgCount++;
-            // Show email prompt after 3 messages if not captured yet
-            if (msgCount >= 3 && !emailCaptured) {
-                showEmailPrompt();
+            // Show geo prompt after 2 msgs if not shown yet
+            if (msgCount >= 2 && !geoAsked && !geoGranted) {
+                showGeoPrompt();
             }
-            // Hide suggestions on first message
+            // Show email capture after 3 messages if not captured or skipped
+            if (msgCount >= 3 && !leadCaptured && !leadSkipped) {
+                showEmailModal();
+            }
             if (msgCount === 1) {
                 document.getElementById('suggestions').classList.add('hidden');
             }
@@ -771,69 +1455,6 @@
             if (el) el.remove();
         }
 
-        // ── Email Capture (asks later, no gate) ─────────
-
-        function showEmailPrompt() {
-            document.getElementById('emailPrompt').classList.add('show');
-        }
-
-        function dismissEmailPrompt() {
-            document.getElementById('emailPrompt').classList.remove('show');
-        }
-
-        async function captureEmail() {
-            const val = document.getElementById('emailInput').value.trim();
-            if (!val || !val.includes('@')) {
-                document.getElementById('emailInput').style.borderColor = '#FF6B6B';
-                setTimeout(() => document.getElementById('emailInput').style.borderColor = '', 1500);
-                return;
-            }
-            email = val;
-            emailCaptured = true;
-
-            // Call /api/leads in background
-            try {
-                await fetch('/api/leads', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email })
-                });
-            } catch (e) {
-                console.log('Lead creation failed:', e);
-            }
-
-            // Also auto affiliate signup
-            try {
-                const res = await fetch('/api/affiliate/signup', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email })
-                });
-                if (res.ok) {
-                    const data = await res.json();
-                    referralUrl = data.referralUrl;
-                    localStorage.setItem('affUrl', referralUrl);
-                }
-            } catch (e) {
-                console.log('Affiliate signup unavailable:', e);
-            }
-
-            // Show thank you
-            document.getElementById('emailPromptForm').style.display = 'none';
-            document.getElementById('emailDisplay').textContent = email;
-            document.getElementById('emailThank').style.display = 'block';
-            setTimeout(() => {
-                document.getElementById('emailPrompt').classList.remove('show');
-                setTimeout(() => {
-                    document.getElementById('emailPromptForm').style.display = 'flex';
-                    document.getElementById('emailThank').style.display = 'none';
-                }, 300);
-            }, 2500);
-
-            // Notify in chat
-            botMsg('Great, ' + email.split('@')[0] + '! Your results will be saved. 🎉');
-        }
-
         // ── Send / Handle Intent ────────────────────────
 
         function send() {
@@ -846,9 +1467,6 @@
         }
 
         function sendQuick(text) {
-            if (!emailCaptured && msgCount === 0) {
-                // Auto-show email after quick tap if none captured yet
-            }
             document.getElementById('chatInput').value = '';
             userMsg(text);
             handleIntent(text);
@@ -864,28 +1482,49 @@
             const low = text.toLowerCase();
 
             // Photo upload
-            if (low.indexOf('photo') !== -1 || low.indexOf('upload') !== -1 || low.indexOf('picture') !== -1) {
+            if (low.indexOf('photo') !== -1 || low.indexOf('upload') !== -1 || low.indexOf('picture') !== -1 || low.indexOf('image') !== -1) {
                 setTimeout(function() { removeTyping(); showUpload(); }, 500);
                 return;
             }
-            // Income / earn
-            if (low.indexOf('income') !== -1 || low.indexOf('earn') !== -1 || low.indexOf('money') !== -1 || low.indexOf('potential') !== -1 || low.indexOf('10,000') !== -1 || low.indexOf('10k') !== -1) {
-                setTimeout(function() { removeTyping(); showIncome(); }, 600);
+            // Income / earn / how much
+            if (low.indexOf('income') !== -1 || low.indexOf('earn') !== -1 || low.indexOf('money') !== -1 || low.indexOf('much') !== -1 || low.indexOf('potential') !== -1 || low.indexOf('estimate') !== -1) {
+                setTimeout(function() { removeTyping(); showIncomeEstimate(); }, 600);
                 return;
             }
-            // Map / location
-            if (low.indexOf('map') !== -1 || low.indexOf('location') !== -1 || low.indexOf('pin') !== -1 || low.indexOf('where') !== -1) {
-                setTimeout(function() { removeTyping(); showMap(); }, 500);
+            // Full rental plan
+            if (low.indexOf('full plan') !== -1 || low.indexOf('whole house') !== -1 || low.indexOf('start renting') !== -1) {
+                setTimeout(function() { removeTyping(); showFullPlan(); }, 600);
+                return;
+            }
+            // What is required
+            if (low.indexOf('required') !== -1 || low.indexOf('need') !== -1 || low.indexOf('requirements') !== -1 || low.indexOf('what do i') !== -1) {
+                setTimeout(function() { removeTyping(); showRequirements(); }, 500);
+                return;
+            }
+            // Get paid / payment
+            if (low.indexOf('paid') !== -1 || low.indexOf('payment') !== -1 || low.indexOf('payout') !== -1 || low.indexOf('withdraw') !== -1) {
+                setTimeout(function() { removeTyping(); showPaymentInfo(); }, 500);
+                return;
+            }
+            // Map / location / geolocation
+            if (low.indexOf('map') !== -1 || low.indexOf('location') !== -1 || low.indexOf('pin') !== -1 || low.indexOf('where') !== -1 || low.indexOf('city') !== -1) {
+                setTimeout(function() { removeTyping(); showMapPrompt(); }, 500);
                 return;
             }
             // Analytics / market
-            if (low.indexOf('analytic') !== -1 || low.indexOf('market') !== -1 || low.indexOf('stat') !== -1 || low.indexOf('data') !== -1) {
-                setTimeout(function() { removeTyping(); showAnalytics(); }, 700);
+            if (low.indexOf('analytic') !== -1 || low.indexOf('market') !== -1 || low.indexOf('stat') !== -1 || low.indexOf('data') !== -1 || low.indexOf('demand') !== -1) {
+                setTimeout(function() { removeTyping(); showMarketAnalytics(); }, 700);
                 return;
             }
             // Host / become
-            if (low.indexOf('host') !== -1 || low.indexOf('become') !== -1 || low.indexOf('start') !== -1 || low.indexOf('begin') !== -1) {
+            if (low.indexOf('host') !== -1 || low.indexOf('become') !== -1 || low.indexOf('start') !== -1 || low.indexOf('begin') !== -1 || low.indexOf('list') !== -1) {
                 setTimeout(function() { removeTyping(); showHostInfo(); }, 500);
+                return;
+            }
+            // Greeting
+            if (low.indexOf('hey') !== -1 || low.indexOf('hello') !== -1 || low.indexOf('hi') !== -1 || low.indexOf('chat cat') !== -1) {
+                removeTyping();
+                botMsg('Hey there! 🐱 I\'m Chat Cat, your side business assistant! Ask me about renting rooms, earning money, or anything about the rental business. What would you like to know?');
                 return;
             }
 
@@ -900,22 +1539,291 @@
             }
         }
 
+        // ── Expandable Sections ─────────────────────────
+
+        let _expCounter = 0;
+        function toggleExpand(id) {
+            const body = document.getElementById(id);
+            const header = body ? body.previousElementSibling : null;
+            if (!body || !header) return;
+            body.classList.toggle('open');
+            header.classList.toggle('open');
+        }
+
+        function createExpandSection(baseId, title, contentHtml) {
+            const uid = baseId + '-' + (++_expCounter) + '-' + Date.now();
+            return '<div class="expand-section">' +
+                '<div class="expand-header" onclick="toggleExpand(\'' + uid + '\')">' +
+                '<span>' + title + '</span>' +
+                '<span class="arrow"><i class="fas fa-chevron-down"></i></span>' +
+                '</div>' +
+                '<div class="expand-body" id="' + uid + '">' +
+                contentHtml +
+                '</div></div>';
+        }
+
+        // ── Info Cards ─────────────────────────────────
+
+        function showIncomeEstimate() {
+            const base = Math.floor(Math.random() * 1500) + 800;
+            const airbnb = Math.floor(base * 1.25);
+            stats.income = base; stats.rate = Math.floor(base / 22); stats.occ = 87; stats.days = Math.floor(Math.random() * 10) + 5;
+            updateStats();
+
+            const breakdownHtml = createExpandSection('exp-income', '💰 Price Breakdown',
+                '<div class="price-row"><span class="label">Nightly rate</span><span class="value">$' + stats.rate + '</span></div>' +
+                '<div class="price-row"><span class="label">Occupancy rate</span><span class="value">' + stats.occ + '%</span></div>' +
+                '<div class="price-row"><span class="label">Nights booked / month</span><span class="value">' + Math.floor(stats.occ / 100 * 30) + '</span></div>' +
+                '<div class="price-row"><span class="label">Cleaning fee (monthly)</span><span class="value">-$' + Math.floor(base * 0.08) + '</span></div>' +
+                '<div class="price-row" style="border-top:2px solid var(--cat-gold);margin-top:0.3rem;padding-top:0.5rem;"><span class="label" style="font-weight:800;">NET MONTHLY</span><span class="value" style="font-size:1.1rem;color:var(--cat-orange);">$' + base.toLocaleString() + '</span></div>'
+            );
+
+            const tipsHtml = createExpandSection('exp-tips', '💡 Tips to Earn More',
+                '<ul>' +
+                '<li><i class="fas fa-camera"></i> Professional photos boost bookings by <b>40%</b></li>' +
+                '<li><i class="fas fa-desk"></i> Add a desk — remote workers pay <b>$200+/month</b> premium</li>' +
+                '<li><i class="fas fa-bolt"></i> Enable Instant Book for <b>25% more visibility</b></li>' +
+                '<li><i class="fas fa-star"></i> Keep rating above 4.8★ for <b>top search ranking</b></li>' +
+                '<li><i class="fas fa-reply-all"></i> Respond within 1 hour — <b>2x more bookings</b></li>' +
+                '</ul>'
+            );
+
+            const html = '<div class="magic-card">' +
+                '<div class="magic-title"><i class="fas fa-calculator"></i> Your Income Potential</div>' +
+                '<div style="text-align:center;color:#888;font-size:0.82rem;">Estimated Monthly Earnings</div>' +
+                '<div class="big-num">$' + base.toLocaleString() + '</div>' +
+                '<div class="plat-box airbnb"><div class="icon"><i class="fab fa-airbnb"></i></div><div class="amt">$' + airbnb.toLocaleString() + '</div><div class="tag">Airbnb estimate</div></div>' +
+                breakdownHtml +
+                tipsHtml +
+                '<div style="margin-top:0.75rem;padding:0.6rem;background:linear-gradient(90deg,#FFD93D,#FF8C42);border-radius:8px;text-align:center;color:#FFF;font-weight:700;font-size:0.82rem;cursor:pointer;" onclick="sendQuick(\'How do I get started?\')">' +
+                '<i class="fas fa-rocket"></i> Ready to start? Let me guide you!</div>' +
+                '</div>';
+
+            botMsgCard(html);
+        }
+
+        function showFullPlan() {
+            const planHtml = createExpandSection('exp-plan1', '📋 Step 1: Prepare Your Space',
+                '<ul>' +
+                '<li><i class="fas fa-check-circle"></i> Deep clean every room — first impressions matter</li>' +
+                '<li><i class="fas fa-check-circle"></i> Take 20+ photos in daylight (smartphone is fine!)</li>' +
+                '<li><i class="fas fa-check-circle"></i> Declutter — less stuff = more bookings</li>' +
+                '<li><i class="fas fa-check-circle"></i> Add essentials: fresh towels, WiFi, soap, sheets</li>' +
+                '<li><i class="fas fa-check-circle"></i> Safety first: smoke detector, fire extinguisher, first aid</li>' +
+                '</ul>'
+            );
+
+            const planHtml2 = createExpandSection('exp-plan2', '📋 Step 2: Create Your Listing',
+                '<ul>' +
+                '<li><i class="fas fa-check-circle"></i> Write a catchy title: \"Cozy private room in [area]\"</li>' +
+                '<li><i class="fas fa-check-circle"></i> Set competitive pricing — start 10% below market</li>' +
+                '<li><i class="fas fa-check-circle"></i> Enable Instant Book for faster first booking</li>' +
+                '<li><i class="fas fa-check-circle"></i> Set house rules clearly (no smoking, quiet hours)</li>' +
+                '<li><i class="fas fa-check-circle"></i> Choose flexible cancellation for more bookings</li>' +
+                '</ul>'
+            );
+
+            const planHtml3 = createExpandSection('exp-plan3', '📋 Step 3: Set Up Payments',
+                '<ul>' +
+                '<li><i class="fas fa-check-circle"></i> Choose your payment method(s) from the Payments tab</li>' +
+                '<li><i class="fas fa-check-circle"></i> For Asia: GCash, PayPal, Coins.ph, Moneybees.ph</li>' +
+                '<li><i class="fas fa-check-circle"></i> Set up automatic payout schedule (weekly recommended)</li>' +
+                '<li><i class="fas fa-check-circle"></i> Keep records of all transactions for tax purposes</li>' +
+                '<li><i class="fas fa-check-circle"></i> Consider holding a security deposit for new guests</li>' +
+                '</ul>'
+            );
+
+            const planHtml4 = createExpandSection('exp-plan4', '📋 Step 4: Welcome Your First Guest',
+                '<ul>' +
+                '<li><i class="fas fa-check-circle"></i> Send a welcome message 24h before check-in</li>' +
+                '<li><i class="fas fa-check-circle"></i> Provide clear instructions for entry and WiFi</li>' +
+                '<li><i class="fas fa-check-circle"></i> Leave a small welcome gift (water, snacks, map)</li>' +
+                '<li><i class="fas fa-check-circle"></i> Be available by phone for questions</li>' +
+                '<li><i class="fas fa-check-circle"></i> Ask for a review after checkout — crucial for growth!</li>' +
+                '</ul>'
+            );
+
+            const html = '<div class="magic-card">' +
+                '<div class="magic-title"><i class="fas fa-home"></i> Full Plan: Renting Your House</div>' +
+                '<div style="font-size:0.82rem;color:#666;margin-bottom:0.5rem;">Everything you need to start renting your whole house to travelers</div>' +
+                '<div class="big-num" style="font-size:1.8rem;">$2,000-4,500/mo</div>' +
+                '<div style="text-align:center;font-size:0.78rem;color:#888;margin-bottom:0.5rem;">Potential earnings for a whole house</div>' +
+                planHtml + planHtml2 + planHtml3 + planHtml4 +
+                '<div style="margin-top:0.75rem;padding:0.6rem;background:linear-gradient(90deg,#A78BFA,#60A5FA);border-radius:8px;text-align:center;color:#FFF;font-weight:700;font-size:0.82rem;cursor:pointer;" onclick="sendQuick(\'I want to start right now!\')">' +
+                '<i class="fas fa-rocket"></i> I\'m ready — let\'s start!</div>' +
+                '</div>';
+
+            botMsgCard(html);
+        }
+
+        function showRequirements() {
+            const html = '<div class="magic-card">' +
+                '<div class="magic-title"><i class="fas fa-clipboard-check"></i> What You Need to Rent a Room</div>' +
+                '<ul style="list-style:none;padding:0;">' +
+                '<li style="padding:0.5rem 0;border-bottom:1px solid rgba(0,0,0,0.04);display:flex;align-items:flex-start;gap:0.5rem;"><i class="fas fa-id-card" style="color:var(--cat-orange);margin-top:0.2rem;"></i> <b>ID & Verification</b><br><span style="font-size:0.78rem;color:#888;">Government ID, selfie verification, background check</span></li>' +
+                '<li style="padding:0.5rem 0;border-bottom:1px solid rgba(0,0,0,0.04);display:flex;align-items:flex-start;gap:0.5rem;"><i class="fas fa-camera" style="color:var(--cat-orange);margin-top:0.2rem;"></i> <b>Good Photos</b><br><span style="font-size:0.78rem;color:#888;">10+ bright photos showing all spaces guests will access</span></li>' +
+                '<li style="padding:0.5rem 0;border-bottom:1px solid rgba(0,0,0,0.04);display:flex;align-items:flex-start;gap:0.5rem;"><i class="fas fa-wifi" style="color:var(--cat-orange);margin-top:0.2rem;"></i> <b>Basic Amenities</b><br><span style="font-size:0.78rem;color:#888;">WiFi, clean bedding, towels, soap, toilet paper</span></li>' +
+                '<li style="padding:0.5rem 0;border-bottom:1px solid rgba(0,0,0,0.04);display:flex;align-items:flex-start;gap:0.5rem;"><i class="fas fa-shield-alt" style="color:var(--cat-orange);margin-top:0.2rem;"></i> <b>Safety & Insurance</b><br><span style="font-size:0.78rem;color:#888;">Check your home insurance covers short-term rentals</span></li>' +
+                '<li style="padding:0.5rem 0;display:flex;align-items:flex-start;gap:0.5rem;"><i class="fas fa-file-contract" style="color:var(--cat-orange);margin-top:0.2rem;"></i> <b>Local Permits</b><br><span style="font-size:0.78rem;color:#888;">Some cities require registration or permits. Check local laws.</span></li>' +
+                '</ul>' +
+                '<div style="margin-top:0.5rem;padding:0.6rem;background:rgba(78,205,196,0.1);border-radius:8px;font-size:0.78rem;color:#555;">' +
+                '<i class="fas fa-lightbulb" style="color:var(--cat-mint);"></i> Most hosts get set up in <b>1-2 weeks</b>. Want me to walk you through each step?' +
+                '</div>' +
+                '</div>';
+
+            botMsgCard(html);
+        }
+
+        function showPaymentInfo() {
+            const html = '<div class="magic-card">' +
+                '<div class="magic-title"><i class="fas fa-money-bill-wave"></i> How You Get Paid</div>' +
+                '<div style="font-size:0.85rem;color:#555;margin-bottom:0.5rem;">Open the <b>Payments tab</b> (right side menu) to see region-specific options. For Asia, these are popular:</div>' +
+                '<div class="pay-grid">' +
+                '<div class="pay-card"><div class="pay-icon"><i class="fas fa-mobile-alt" style="color:#007AFF"></i></div><div class="pay-name">GCash</div><div class="pay-region">Philippines</div></div>' +
+                '<div class="pay-card"><div class="pay-icon"><i class="fab fa-paypal" style="color:#003087"></i></div><div class="pay-name">PayPal</div><div class="pay-region">Worldwide</div></div>' +
+                '<div class="pay-card"><div class="pay-icon"><i class="fab fa-telegram" style="color:#0088cc"></i></div><div class="pay-name">Telegram Pay</div><div class="pay-region">Global</div></div>' +
+                '<div class="pay-card"><div class="pay-icon"><i class="fas fa-coins" style="color:#F7931A"></i></div><div class="pay-name">Coins.ph</div><div class="pay-region">Crypto/PH</div></div>' +
+                '</div>' +
+                '<div style="margin-top:0.7rem;font-size:0.78rem;color:#888;text-align:center;">Payouts are sent within 1-3 business days after guest check-in.</div>' +
+                '</div>';
+
+            botMsgCard(html);
+        }
+
+        function showMapPrompt() {
+            const mid = 'map-' + Date.now();
+            const html = '<div class="msg-label"><i class="fas fa-cat"></i> Chat Cat</div>' +
+                '<div style="font-size:0.85rem;margin-bottom:0.4rem;">📍 Enter your city for local market data</div>' +
+                '<div style="display:flex;gap:0.4rem;">' +
+                '<input type="text" id="loc-' + mid + '" placeholder="City or neighborhood..." style="flex:1;padding:0.5rem 0.8rem;border:2px solid #FFD93D;border-radius:10px;background:#FFF;color:#333;outline:none;font-size:0.85rem;" onkeypress="if(event.key===\'Enter\') searchLocation(\'' + mid + '\')">' +
+                '<button style="padding:0.5rem 0.8rem;border:none;border-radius:10px;background:#FF8C42;color:#FFF;cursor:pointer;" onclick="searchLocation(\'' + mid + '\')"><i class="fas fa-search"></i></button>' +
+                '</div>';
+
+            botMsgCard(html);
+        }
+
+        function searchLocation(mid) {
+            const val = document.getElementById('loc-' + mid).value.trim();
+            if (!val) return;
+            botMsg('📍 Searching market data for "' + val + '"...');
+            setTimeout(function() {
+                showMarketAnalytics();
+            }, 800);
+        }
+
+        function showMarketAnalytics() {
+            const html = '<div class="magic-card">' +
+                '<div class="magic-title"><i class="fas fa-chart-bar"></i> Market Analytics</div>' +
+                '<div class="stats-grid" style="margin-top:0.4rem;">' +
+                '<div class="stat-box"><div class="stat-val" style="color:#28a745;">87%</div><div class="stat-lbl">Occupancy</div></div>' +
+                '<div class="stat-box"><div class="stat-val" style="color:#E85D04;">$142</div><div class="stat-lbl">Avg Daily Rate</div></div>' +
+                '<div class="stat-box"><div class="stat-val" style="color:#007bff;">4.8★</div><div class="stat-lbl">Target Rating</div></div>' +
+                '<div class="stat-box"><div class="stat-val" style="color:#6f42c1;">12d</div><div class="stat-lbl">To 1st Booking</div></div>' +
+                '</div>' +
+                '<div style="margin-top:0.75rem;padding:0.6rem;background:linear-gradient(90deg,#FFD93D,#FF8C42);border-radius:8px;text-align:center;color:#FFF;font-weight:700;font-size:0.82rem;">' +
+                '<i class="fas fa-trophy"></i> Strong demand area! Great potential for your space.</div>' +
+                '<div style="margin-top:0.5rem;" class="expand-section">' +
+                '<div class="expand-header" onclick="toggleExpand(\'exp-market-' + Date.now() + '\')">' +
+                '<span>📊 Competitor Analysis</span><span class="arrow"><i class="fas fa-chevron-down"></i></span></div>' +
+                '<div class="expand-body" id="exp-market-' + Date.now() + '">' +
+                '<ul><li><i class="fas fa-check"></i> 23 similar listings nearby</li>' +
+                '<li><i class="fas fa-check"></i> Average price: $135/night</li>' +
+                '<li><i class="fas fa-check"></i> Top hosts earn $2,000+/month</li>' +
+                '<li><i class="fas fa-check"></i> Seasonal demand: High (Mar-Jun, Oct-Dec)</li>' +
+                '</ul></div></div>' +
+                '</div>';
+
+            botMsgCard(html);
+        }
+
+        function showHostInfo() {
+            const html = '<div class="magic-card">' +
+                '<div class="magic-title"><i class="fas fa-key"></i> Your Hosting Journey</div>' +
+                '<div style="display:flex;flex-direction:column;gap:0.5rem;">' +
+                '<div style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem;background:#FFF;border-radius:8px;">' +
+                '<div style="width:26px;height:26px;background:#FFD93D;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.8rem;color:#5a4a00;">1</div>' +
+                '<div><div style="font-weight:700;font-size:0.85rem;">Sign up & verify</div><div style="font-size:0.72rem;color:#999;">Takes 10 minutes</div></div></div>' +
+                '<div style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem;background:#FFF;border-radius:8px;">' +
+                '<div style="width:26px;height:26px;background:#FF8C42;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.8rem;color:#FFF;">2</div>' +
+                '<div><div style="font-weight:700;font-size:0.85rem;">List your space</div><div style="font-size:0.72rem;color:#999;">Photos, description, pricing</div></div></div>' +
+                '<div style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem;background:#FFF;border-radius:8px;">' +
+                '<div style="width:26px;height:26px;background:#FF6B6B;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.8rem;color:#FFF;">3</div>' +
+                '<div><div style="font-weight:700;font-size:0.85rem;">Get bookings & earn</div><div style="font-size:0.72rem;color:#999;">First booking in ~2 weeks</div></div></div>' +
+                '</div>' +
+                '<div style="margin-top:0.6rem;padding:0.8rem;background:linear-gradient(135deg,#FF8C42,#FF6B6B);border-radius:10px;color:#FFF;text-align:center;cursor:pointer;" onclick="track()">' +
+                '<div style="font-weight:800;font-size:0.85rem;"><i class="fas fa-rocket"></i> Start Now — Get $25 Bonus</div></div>' +
+                '</div>';
+
+            botMsgCard(html);
+        }
+
+        function showUpload() {
+            const id = 'up-' + Date.now();
+            const html = '<div style="border:2px dashed #FFD93D;border-radius:14px;padding:1.5rem;text-align:center;background:rgba(255,255,255,0.4);cursor:pointer;" onclick="document.getElementById(\'' + id + '\').click()">' +
+                '<i class="fas fa-cloud-upload-alt" style="font-size:1.8rem;color:#FF8C42;margin-bottom:0.4rem;"></i>' +
+                '<div style="font-weight:700;">Upload your room photo</div>' +
+                '<div style="font-size:0.8rem;color:#888;">I\'ll analyze it and estimate earnings</div></div>' +
+                '<input type="file" id="' + id + '" accept="image/*" style="display:none" onchange="handleFileDirect(event, \'' + id + '\')">';
+
+            botMsgCard(html);
+        }
+
+        function handleFile(event) {
+            const file = event.target.files[0];
+            if (file) processImage(file);
+        }
+        function handleFileDirect(event, id) {
+            const file = event.target.files[0];
+            if (file) processImage(file);
+        }
+
+        async function processImage(file) {
+            const formData = new FormData();
+            formData.append('photo', file);
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = e.target.result;
+                botMsgCard('<div>Analyzing your space...</div><img src="' + preview + '" style="width:100%;border-radius:10px;margin-top:0.4rem;" alt="Room">');
+            };
+            reader.readAsDataURL(file);
+            try {
+                const res = await fetch('/api/photo', { method: 'POST', body: formData });
+                if (res.ok) {
+                    const data = await res.json();
+                    const msgs = document.getElementById('chatMessages');
+                    const lastMsg = msgs.lastElementChild;
+                    if (lastMsg && lastMsg.classList.contains('bot')) {
+                        let html = '<div class="msg-label"><i class="fas fa-cat"></i> Chat Cat</div>';
+                        if (data.analysis) {
+                            html += '<div>' + data.analysis.replace(/\n/g, '<br>') + '</div>';
+                        } else {
+                            html += '<div>Nice space! Based on what I see:<br>• Clean and well-lit<br>• Good size for guests<br>• Could earn <b>$1,200-1,800/month</b></div>';
+                        }
+                        html += '<div style="margin-top:0.5rem;">Want the full income breakdown?</div>';
+                        lastMsg.innerHTML = html;
+                    }
+                }
+            } catch (e) {
+                console.log('Photo upload failed:', e);
+            }
+        }
+
         // ── Local Fallback ──────────────────────────────
 
         function getLocalReply(text) {
             const low = text.toLowerCase();
-            if (low.indexOf('10,000') !== -1 || low.indexOf('10k') !== -1) {
-                return 'To hit $10,000/month, you need about 3-4 well-located properties or one premium space in a high-demand area.\n\nYour options:\n• Multi-property — 3-4 apartments earning $2,500-3,500 each\n• Premium space — Luxury villa in top tourist area\n• Arbitrage — Rent long-term, list short-term\n\nWant me to calculate based on your location?';
+            if (low.indexOf('hi') !== -1 || low.indexOf('hello') !== -1 || low.indexOf('hey') !== -1) {
+                return '🐱 Hey! I\'m Chat Cat. Ask me about:\n\n• How much you can earn renting a room\n• What you need to get started\n• Payment methods available in your region\n• Full plan to rent your space\n\nWhat interests you?';
             }
-            if (low.indexOf('spare room') !== -1) {
-                return 'A spare room is a goldmine! Here is the real picture:\n\nAverage earnings: $800 — $2,000/month\n\nQuick wins:\n• Add a desk = +$200/month (remote workers pay premium)\n• Good photos = +30% more bookings\n• Instant Book = +25% visibility\n\nWant me to calculate your exact potential?';
+            if (low.indexOf('thank') !== -1) {
+                return 'You\'re welcome! 🐱 Any other questions about renting or earning? I\'m here to help!';
             }
             const replies = [
-                'Great question! To give you accurate numbers, I need your location and room type. Want to share those?',
-                'Your space has serious potential! Most hosts earn $800-2,500/month. Shall I calculate yours?',
-                'I love your enthusiasm! The key factors: location, amenities, and photos. Want to upload a room photo?',
-                'Smart thinking! Spaces like yours are in high demand. Want to see the market analytics?',
-                'Absolutely! First, let us pin your location so I can check local competition and pricing. Ready?'
+                'Great question! To give you the most accurate info, could you tell me your city or region? I have region-specific data on rental earnings and payment methods.',
+                'That\'s a smart move! Most hosts earn $800-2,500/month from a single room. Want me to calculate your potential?',
+                'I love the enthusiasm! 🐱 The key factors for success: great photos, competitive pricing, and fast responses. Want to dive deeper?',
+                'Absolutely! First, would you like to share your location so I can check local market rates and demand?',
+                'You\'re thinking like an entrepreneur! Check out the Payments tab (right side menu) to see region-specific payout options like GCash, PayPal, and more.'
             ];
             return replies[Math.floor(Math.random() * replies.length)];
         }
@@ -938,103 +1846,6 @@
             return reply;
         }
 
-        // ── Photo Upload ───────────────────────────────
-
-        function showUpload() {
-            const id = 'up-' + Date.now();
-            botMsg(null, '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div><div style="border:2px dashed #FFD93D;border-radius:14px;padding:1.5rem;text-align:center;background:rgba(255,255,255,0.4);cursor:pointer;" onclick="document.getElementById(\'' + id + '\').click()"><i class="fas fa-cloud-upload-alt" style="font-size:1.8rem;color:#FF8C42;margin-bottom:0.4rem;"></i><div style="font-weight:700;">Drop your room photo here</div><div style="font-size:0.8rem;color:#888;">or click to browse</div></div><input type="file" id="' + id + '" accept="image/*" style="display:none" onchange="handleFileDirect(event, \'' + id + '\')">');
-        }
-
-        function handleFile(event) {
-            const file = event.target.files[0];
-            if (file) processImage(file);
-        }
-        function handleFileDirect(event, id) {
-            const file = event.target.files[0];
-            if (file) processImage(file);
-        }
-
-        async function processImage(file) {
-            const formData = new FormData();
-            formData.append('photo', file);
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const preview = e.target.result;
-                botMsg(null, '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div><div>Analyzing your space...</div><img src="' + preview + '" style="width:100%;border-radius:10px;margin-top:0.4rem;" alt="Room">');
-            };
-            reader.readAsDataURL(file);
-            try {
-                const res = await fetch('/api/photo', { method: 'POST', body: formData });
-                if (res.ok) {
-                    const data = await res.json();
-                    const msgs = document.getElementById('chatMessages');
-                    const lastMsg = msgs.lastElementChild;
-                    if (lastMsg && lastMsg.classList.contains('bot')) {
-                        let html = '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div>';
-                        if (data.analysis) {
-                            html += '<div>' + data.analysis.replace(/\n/g, '<br>') + '</div>';
-                        } else {
-                            html += '<div>Beautiful space! Here is what I see:<br>• Natural light<br>• Cozy vibe<br>• Good proportions</div>';
-                        }
-                        html += '<div style="margin-top:0.5rem;">This room could earn <b>$1,200-1,800/month</b>. Want the full breakdown?</div>';
-                        lastMsg.innerHTML = html;
-                    }
-                }
-            } catch (e) {
-                console.log('Photo upload failed:', e);
-            }
-        }
-
-        // ── Income Estimate ─────────────────────────────
-
-        async function showIncome() {
-            try {
-                const res = await fetch('/api/estimate', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({})
-                });
-                if (res.ok) {
-                    const data = await res.json();
-                    stats.income = data.monthlyIncome;
-                    stats.rate = data.dailyRate;
-                    stats.occ = data.occupancy;
-                    stats.days = data.daysToBooking;
-                    updateStats();
-                    botMsg(null, '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div><div class="magic-card"><div class="magic-title"><i class="fas fa-calculator"></i> Your Income Potential</div><div style="text-align:center;color:#888;font-size:0.82rem;">Estimated Monthly Earnings</div><div class="big-num">$' + data.monthlyIncome.toLocaleString() + '</div><div class="plat-box airbnb"><div class="icon"><i class="fab fa-airbnb"></i></div><div class="amt">$' + data.airbnbEstimate.toLocaleString() + '</div><div class="tag">Airbnb</div></div><div style="margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid #eee;font-size:0.78rem;color:#666;text-align:center;"><i class="fas fa-lightbulb" style="color:#FFD93D;"></i> Quality photos & fast responses boost earnings!</div></div>');
-                    return;
-                }
-            } catch (e) {
-                console.log('Estimate API failed, using local fallback');
-            }
-            const base = Math.floor(Math.random() * 1200) + 800;
-            const airbnb = Math.floor(base * 1.25);
-            stats.income = base; stats.rate = Math.floor(base / 22); stats.occ = 87; stats.days = Math.floor(Math.random() * 10) + 5;
-            updateStats();
-            botMsg(null, '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div><div class="magic-card"><div class="magic-title"><i class="fas fa-calculator"></i> Your Income Potential</div><div style="text-align:center;color:#888;font-size:0.82rem;">Estimated Monthly Earnings</div><div class="big-num">$' + base.toLocaleString() + '</div><div class="plat-box airbnb"><div class="icon"><i class="fab fa-airbnb"></i></div><div class="amt">$' + airbnb.toLocaleString() + '</div><div class="tag">Airbnb</div></div></div>');
-        }
-
-        // ── Map ────────────────────────────────────────
-
-        function showMap() {
-            const mid = 'map-' + Date.now();
-            botMsg(null, '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div><div style="display:flex;gap:0.4rem;margin-bottom:0.4rem;"><input type="text" id="loc-' + mid + '" placeholder="Enter city or address..." style="flex:1;padding:0.5rem 0.8rem;border:2px solid #FFD93D;border-radius:10px;background:#FFF;color:#333;outline:none;font-size:0.85rem;" onkeypress="if(event.key===\\'Enter\\')searchLoc(\\'' + mid + '\\')"><button style="padding:0.5rem 0.8rem;border:none;border-radius:10px;background:#FF8C42;color:#FFF;cursor:pointer;" onclick="searchLoc(\\'' + mid + '\\')"><i class="fas fa-search"></i></button></div><div id="' + mid + '" style="width:100%;height:160px;border-radius:12px;border:2px solid #FFD93D;overflow:hidden;background:rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;color:#888;font-size:0.85rem;"><i class="fas fa-map-marker-alt" style="color:#FF6B6B;margin-right:0.3rem;"></i> Enter a location above</div>');
-        }
-
-        function searchLoc(mid) {
-            const val = document.getElementById('loc-' + mid).value;
-            botMsg('Location "' + val + '" set! This area has strong demand. Let me show you the market data.');
-            showAnalytics();
-        }
-
-        function showAnalytics() {
-            botMsg(null, '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div><div class="magic-card"><div class="magic-title"><i class="fas fa-chart-bar"></i> Market Analytics</div><div class="stats-grid" style="margin-top:0.4rem;"><div class="stat-box"><div class="stat-val" style="color:#28a745;">87%</div><div class="stat-lbl">Occupancy</div></div><div class="stat-box"><div class="stat-val" style="color:#E85D04;">$142</div><div class="stat-lbl">Daily Rate</div></div><div class="stat-box"><div class="stat-val" style="color:#007bff;">4.8★</div><div class="stat-lbl">Target Rating</div></div><div class="stat-box"><div class="stat-val" style="color:#6f42c1;">12d</div><div class="stat-lbl">To 1st Booking</div></div></div><div style="margin-top:0.75rem;padding:0.6rem;background:linear-gradient(90deg,#FFD93D,#FF8C42);border-radius:8px;text-align:center;color:#FFF;font-weight:700;font-size:0.82rem;"><i class="fas fa-trophy"></i> TOP 25% demand area!</div></div>');
-        }
-
-        function showHostInfo() {
-            botMsg(null, '<div class="msg-label"><i class="fas fa-robot"></i> Sunny</div><div class="magic-card"><div class="magic-title"><i class="fas fa-key"></i> Your Hosting Journey</div><div style="display:flex;flex-direction:column;gap:0.5rem;"><div style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem;background:#FFF;border-radius:8px;"><div style="width:26px;height:26px;background:#FFD93D;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.8rem;color:#5a4a00;">1</div><div><div style="font-weight:700;font-size:0.85rem;">Sign up & verify</div><div style="font-size:0.72rem;color:#999;">Takes 10 minutes</div></div></div><div style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem;background:#FFF;border-radius:8px;"><div style="width:26px;height:26px;background:#FF8C42;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.8rem;color:#FFF;">2</div><div><div style="font-weight:700;font-size:0.85rem;">List your space</div><div style="font-size:0.72rem;color:#999;">Photos, description, pricing</div></div></div><div style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem;background:#FFF;border-radius:8px;"><div style="width:26px;height:26px;background:#FF6B6B;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.8rem;color:#FFF;">3</div><div><div style="font-weight:700;font-size:0.85rem;">Get bookings & earn</div><div style="font-size:0.72rem;color:#999;">First booking in ~2 weeks</div></div></div></div><div style="margin-top:0.6rem;padding:0.8rem;background:linear-gradient(135deg,#FF8C42,#FF6B6B);border-radius:10px;color:#FFF;text-align:center;cursor:pointer;" onclick="track()"><div style="font-weight:800;font-size:0.85rem;"><i class="fas fa-rocket"></i> Start Now — Get $25 Bonus</div></div></div>');
-        }
-
         // ── Stats ──────────────────────────────────────
 
         function updateStats() {
@@ -1047,11 +1858,8 @@
         // ── Tracking ────────────────────────────────────
 
         function track() {
-            const url = referralUrl || 'https://www.airbnb.de/rp/alejandrod20340?p=stay';
+            const url = referralUrl || 'https://www.airbnb.com/r/sidebusiness';
             window.open(url, '_blank');
-            if (!emailCaptured) {
-                showEmailPrompt();
-            }
             botMsg('Opened your Airbnb referral link! 🚀');
         }
 
@@ -1060,6 +1868,7 @@
         function openSettings() {
             document.getElementById('settingsModal').classList.add('active');
             document.getElementById('affIdInput').value = localStorage.getItem('affId') || 'sidebusiness';
+            document.getElementById('regionSelect').value = region;
         }
         function closeSettings() {
             document.getElementById('settingsModal').classList.remove('active');
@@ -1067,20 +1876,96 @@
         function saveSettings() {
             const affVal = document.getElementById('affIdInput').value.trim() || 'sidebusiness';
             localStorage.setItem('affId', affVal);
+            region = document.getElementById('regionSelect').value;
+            localStorage.setItem('sbRegion', region);
+            renderPaymentMethods(region);
             closeSettings();
-            botMsg('Settings saved! ✅');
-        }
-
-        // ── Toggles ─────────────────────────────────────
-
-        function toggleInfos() {
-            const tab = document.getElementById('infosTab');
-            const icon = document.getElementById('infosIcon');
-            tab.classList.toggle('open');
-            icon.className = tab.classList.contains('open') ? 'fas fa-chevron-right' : 'fas fa-chevron-left';
+            botMsg('Settings saved! Region: <b>' + REGION_NAMES[region] + '</b> ✅');
         }
 
         // ── Load persisted stats ────────────────────────
+
+        // ── Email Capture ───────────────────────────────
+
+        function showEmailModal() {
+            if (leadCaptured || leadSkipped || emailSubmitting) return;
+            const modal = document.getElementById('emailModal');
+            if (!modal) return;
+            modal.style.display = 'flex';
+            modal.classList.add('active');
+            document.getElementById('emailStatus').textContent = '';
+            setTimeout(function() {
+                document.getElementById('emailInput').focus();
+            }, 400);
+        }
+
+        function hideEmailModal() {
+            const modal = document.getElementById('emailModal');
+            if (!modal) return;
+            modal.style.display = 'none';
+            modal.classList.remove('active');
+        }
+
+        function skipEmail() {
+            leadSkipped = true;
+            localStorage.setItem('sbLeadSkip', 'true');
+            hideEmailModal();
+            botMsg('No problem! You can always save your progress later in Settings. 🐱');
+        }
+
+        async function submitEmail() {
+            if (emailSubmitting) return;
+            const input = document.getElementById('emailInput');
+            const email = input.value.trim();
+            const status = document.getElementById('emailStatus');
+            const btn = document.getElementById('emailSubmitBtn');
+
+            // Validate
+            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                status.textContent = '⚠️ Please enter a valid email address';
+                status.className = 'status-msg error';
+                input.focus();
+                return;
+            }
+
+            emailSubmitting = true;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            status.textContent = '';
+
+            try {
+                const res = await fetch('/api/leads', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    leadCaptured = true;
+                    localStorage.setItem('sbLeadEmail', email);
+                    status.textContent = '✅ Saved! Your progress is now secure.';
+                    status.className = 'status-msg success';
+                    setTimeout(function() {
+                        hideEmailModal();
+                        botMsg('Awesome! 🐱 Your progress is saved. I\'ll send you personalized tips and market updates. Need help with anything else?');
+                    }, 1200);
+                } else {
+                    const err = await res.json();
+                    status.textContent = '❌ ' + (err.error || 'Something went wrong. Try again.');
+                    status.className = 'status-msg error';
+                    emailSubmitting = false;
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Save';
+                }
+            } catch (e) {
+                status.textContent = '❌ Network error. Check connection and try again.';
+                status.className = 'status-msg error';
+                emailSubmitting = false;
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-paper-plane"></i> Save';
+            }
+        }
 
         async function loadStats() {
             try {

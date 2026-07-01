@@ -1,4 +1,4 @@
--- SunnyHost Database Schema
+-- sidebusiness.online — Database Schema
 -- Run against your Supabase/Postgres database manually, or let server.js auto-init
 
 CREATE TABLE IF NOT EXISTS leads (
