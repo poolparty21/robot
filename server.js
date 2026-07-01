@@ -116,6 +116,14 @@ function calculateIncome(params) {
   };
 }
 
+
+// ── Admin Auth Helper ──────────────────────────────
+function isAdmin(req) {
+  const pass = process.env.ADMIN_PASS;
+  if (!pass) return true; // no password set = open access (dev mode)
+  return req.query.pass === pass;
+}
+
 // ── ENDPOINTS ────────────────────────────────────────
 
 // POST /api/leads — create a lead and set a signed httpOnly cookie
@@ -387,8 +395,11 @@ app.get('/api/stats', async (req, res) => {
 });
 
 
-// GET /api/leads — list all leads (admin use — returns email + created_at)
+// GET /api/leads — list all leads (requires ADMIN_PASS)
 app.get('/api/leads', async (req, res) => {
+  if (!isAdmin(req)) {
+    return res.status(401).json({ error: 'Unauthorized. Pass ADMIN_PASS as ?pass= parameter.' });
+  }
   try {
     const leads = await getAllLeads();
     res.json(leads.map(function(l) {
@@ -406,8 +417,35 @@ app.get('/api/leads', async (req, res) => {
   }
 });
 
-// GET /api/admin/leads — HTML page showing all leads (no auth for now)
-app.get('/admin', async (_req, res) => {
+// GET /admin — HTML admin page (requires ADMIN_PASS)
+app.get('/admin', async (req, res) => {
+  if (!isAdmin(req)) {
+    return res.send(`<!DOCTYPE html>
+<html><head><title>Admin Login - sidebusiness.online</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,sans-serif;background:#f0f2f5;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:1rem}
+.card{background:#fff;border-radius:16px;padding:2.5rem 2rem;max-width:360px;width:100%;box-shadow:0 10px 25px rgba(0,0,0,0.08);text-align:center}
+.card h1{font-size:1.3rem;color:#1a1a2e;margin-bottom:0.3rem}
+.card p{font-size:0.85rem;color:#888;margin-bottom:1.5rem}
+.card input{width:100%;padding:0.75rem 1rem;border:2px solid #e5e7eb;border-radius:10px;font-size:0.95rem;outline:none;margin-bottom:0.8rem;transition:border-color 0.2s}
+.card input:focus{border-color:#E85D04}
+.card button{width:100%;padding:0.75rem;border:none;border-radius:10px;background:#E85D04;color:#fff;font-weight:700;font-size:0.95rem;cursor:pointer}
+.card button:hover{background:#d45404}
+.card .error{color:#dc2626;font-size:0.82rem;margin-top:0.5rem}
+</style></head><body>
+<div class="card">
+<h1>🔐 Admin</h1>
+<p>Enter your admin password</p>
+<form method="get">
+<input type="password" name="pass" placeholder="Password" autofocus>
+<button type="submit">Login</button>
+</form>
+${req.query.pass ? '<div class="error">Wrong password</div>' : ''}
+</div>
+</body></html>`);
+  }
   try {
     const leads = await getAllLeads();
     res.send(`<!DOCTYPE html>
